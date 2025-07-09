@@ -49,20 +49,20 @@ export function Header({ searchQuery, setSearchQuery }) {
   return (
     <>
       <header className="sticky top-0 z-50 bg-black/75 backdrop-blur-md border-b border-purple-500/20 text-white">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo - Always visible */}
-            <div className="flex items-center space-x-2 shrink-0">
+            <div className="flex items-center space-x-1 sm:space-x-2 shrink-0 min-w-0">
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                 <Book className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent truncate">
                 MangaNest
               </span>
             </div>
 
             {/* Desktop Search Bar - Hidden on mobile */}
-            <div className="hidden md:flex items-center mx-8 max-w-md w-full">
+            <div className="hidden md:flex items-center mx-4 lg:mx-8 max-w-md w-full">
               <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
@@ -77,12 +77,12 @@ export function Header({ searchQuery, setSearchQuery }) {
             </div>
 
             {/* Desktop Navigation - Hidden on mobile and tablet */}
-            <nav className="hidden lg:flex items-center space-x-6">
+            <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6">
               {navItems.map((item) => (
                 <a
                   key={item.label}
                   href={item.href}
-                  className={`flex items-center space-x-2 text-sm font-medium transition-colors hover:text-purple-400 ${
+                  className={`flex items-center space-x-1 xl:space-x-2 text-sm font-medium transition-colors hover:text-purple-400 whitespace-nowrap ${
                     item.active ? "text-purple-400" : "text-gray-300"
                   }`}
                 >
@@ -93,7 +93,7 @@ export function Header({ searchQuery, setSearchQuery }) {
             </nav>
 
             {/* Right side actions */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
               {/* Mobile Search Toggle - Only visible on mobile */}
               <Button
                 variant="ghost"
@@ -137,7 +137,7 @@ export function Header({ searchQuery, setSearchQuery }) {
 
           {/* Mobile Search Bar - Slides down when toggled */}
           {isSearchOpen && (
-            <div className="md:hidden py-4 border-t border-gray-700 animate-in slide-in-from-top-2">
+            <div className="md:hidden py-3 px-2 sm:px-4 border-t border-gray-700 animate-in slide-in-from-top-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
@@ -156,15 +156,15 @@ export function Header({ searchQuery, setSearchQuery }) {
 
       {/* Mobile Menu Overlay - Full screen on mobile */}
       {isMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-16 z-40 bg-black/95 backdrop-blur-md w-1/2 md:w-1/3 ">
-          <div className="flex flex-col h-full px-4 py-6">
+        <div className="lg:hidden fixed inset-0 top-16 z-40 bg-black/95 backdrop-blur-md">
+          <div className="flex flex-col h-full w-full max-w-xs px-4 py-6">
             {/* Navigation Links */}
             <nav className="flex flex-col space-y-1">
               {navItems.map((item) => (
                 <a
                   key={item.label}
                   href={item.href}
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium transition-colors hover:bg-gray-800 ${
+                  className={`flex items-center space-x-3 px-3 py-3 rounded-lg text-base font-medium transition-colors hover:bg-gray-800 ${
                     item.active
                       ? "text-purple-400 bg-gray-800/50"
                       : "text-gray-300"
@@ -184,7 +184,7 @@ export function Header({ searchQuery, setSearchQuery }) {
             <div className="flex flex-col space-y-1">
               <a
                 href="#"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-800 transition-colors"
+                className="flex items-center space-x-3 px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-800 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Bell className="w-5 h-5" />
@@ -192,7 +192,7 @@ export function Header({ searchQuery, setSearchQuery }) {
               </a>
               <a
                 href="#"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-800 transition-colors"
+                className="flex items-center space-x-3 px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-800 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <User className="w-5 h-5" />

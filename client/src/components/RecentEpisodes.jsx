@@ -58,16 +58,16 @@ export function RecentEpisodes() {
   return (
     <section>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white">Latest Episodes</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">Latest Episodes</h2>
         <Button
           variant="ghost"
-          className="text-purple-400 hover:text-purple-300"
+          className="text-purple-400 hover:text-purple-300 text-sm sm:text-base"
         >
           View All
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {animeList.map((anime) => (
           <Card
             key={anime.id}
@@ -89,19 +89,19 @@ export function RecentEpisodes() {
                     Read
                   </Button>
                 </div>
-                <div className="absolute top-2 right-2 sm:top-3 sm:right-3 lg:top-4 lg:right-4">
+                <div className="absolute top-2 right-2">
                   <Badge
                     variant="secondary"
-                    className="bg-black/70 text-white text-xs sm:text-sm"
+                    className="bg-black/70 text-white text-xs"
                   >
-                    <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5 sm:mr-1 fill-yellow-400 text-yellow-400" />
+                    <Star className="w-2.5 h-2.5 mr-0.5 fill-yellow-400 text-yellow-400" />
                     {anime.rating}
                   </Badge>
                 </div>
               </div>
-              <div className="p-2">
+              <div className="p-3">
                 <div className="mb-3">
-                  <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-purple-400 transition-colors">
+                  <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-purple-400 transition-colors line-clamp-1">
                     {anime.title}
                   </h3>
                   <p className="text-gray-400 text-xs line-clamp-1">
@@ -109,11 +109,11 @@ export function RecentEpisodes() {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-sm text-gray-400">
+                <div className="flex items-center justify-between text-xs sm:text-sm text-gray-400">
                   <div className="flex items-center space-x-1">
-                    <span>{anime.episode}</span>
+                    <span className="truncate">{anime.episode}</span>
                   </div>
-                  <span>{anime.duration}</span>
+                  <span className="whitespace-nowrap">{anime.duration}</span>
                 </div>
               </div>
             </CardContent>

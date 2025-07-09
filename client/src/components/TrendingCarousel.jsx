@@ -79,20 +79,22 @@ export function TrendingCarousel() {
   useEffect(() => {
     const updateItemsPerView = () => {
       const width = window.innerWidth;
-      if (width < 480) {
-        setItemsPerView(1); // Mobile phones (portrait)
+      if (width < 375) {
+        setItemsPerView(1.2); // Very small phones
+      } else if (width < 480) {
+        setItemsPerView(1.5); // Small phones
       } else if (width < 640) {
-        setItemsPerView(1.5); // Mobile phones (landscape) / Small phones
+        setItemsPerView(2); // Large phones
       } else if (width < 768) {
-        setItemsPerView(2); // Large mobile / Small tablets
+        setItemsPerView(2.5); // Small tablets
       } else if (width < 1024) {
-        setItemsPerView(2.5); // Tablets
+        setItemsPerView(3); // Tablets
       } else if (width < 1280) {
-        setItemsPerView(3); // Small laptops
+        setItemsPerView(3.5); // Small laptops
       } else if (width < 1536) {
-        setItemsPerView(4); // Laptops / Desktop
+        setItemsPerView(4.5); // Laptops / Desktop
       } else if (width < 1920) {
-        setItemsPerView(5); // Large desktop
+        setItemsPerView(5.5); // Large desktop
       } else {
         setItemsPerView(6); // TV / Ultra-wide screens
       }
@@ -120,7 +122,7 @@ export function TrendingCarousel() {
   return (
     <section className="relative">
       <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white">
           Trending Now
         </h2>
         <div className="flex items-center space-x-1 sm:space-x-2">
@@ -145,7 +147,7 @@ export function TrendingCarousel() {
 
       <div className="relative overflow-hidden">
         <div
-          className="flex transition-transform duration-500 ease-in-out gap-2 sm:gap-3 lg:gap-4"
+          className="flex transition-transform duration-500 ease-in-out gap-2 sm:gap-3 md:gap-4"
           style={{
             transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
             width: `${(trendingAnime.length / itemsPerView) * 100}%`,
@@ -159,7 +161,7 @@ export function TrendingCarousel() {
             >
               <Card className="group bg-gray-900/50 border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 overflow-hidden h-full">
                 <CardContent className="p-0 relative h-full">
-                  <div className="relative aspect-[3/4] sm:aspect-[2/3] lg:aspect-[3/4] overflow-hidden">
+                  <div className="relative aspect-[3/4] overflow-hidden">
                     <img
                       src={anime.image}
                       alt={anime.title}
@@ -170,14 +172,14 @@ export function TrendingCarousel() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                     {/* Rank number - responsive sizing */}
-                    <div className="absolute top-2 left-2 sm:top-3 sm:left-3 lg:top-4 lg:left-4">
-                      <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white/20 leading-none">
+                    <div className="absolute top-1 left-1 sm:top-2 sm:left-2 md:top-3 md:left-3">
+                      <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white/20 leading-none">
                         {anime.rank}
                       </div>
                     </div>
 
                     {/* Rating badge - responsive sizing */}
-                    <div className="absolute top-2 right-2 sm:top-3 sm:right-3 lg:top-4 lg:right-4">
+                    <div className="absolute top-1 right-1 sm:top-2 sm:right-2 md:top-3 md:right-3">
                       <Badge
                         variant="secondary"
                         className="bg-black/70 text-white text-xs sm:text-sm"
@@ -190,16 +192,16 @@ export function TrendingCarousel() {
                     {/* Book button overlay - responsive sizing */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <Button
-                        size="lg"
-                        className="bg-purple-600 hover:bg-purple-700 rounded-full w-8 h-8 sm:w-12 sm:h-12 lg:w-16 lg:h-16"
+                        size="sm"
+                        className="bg-purple-600 hover:bg-purple-700 rounded-full w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
                       >
-                        <Book className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+                        <Book className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                       </Button>
                     </div>
 
                     {/* Title at bottom - responsive sizing */}
-                    <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 lg:p-4">
-                      <h3 className="text-white font-bold text-sm sm:text-base lg:text-lg leading-tight group-hover:text-purple-400 transition-colors line-clamp-2">
+                    <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3">
+                      <h3 className="text-white font-bold text-xs sm:text-sm md:text-base leading-tight group-hover:text-purple-400 transition-colors line-clamp-2">
                         {anime.title}
                       </h3>
                     </div>
@@ -213,7 +215,7 @@ export function TrendingCarousel() {
 
       {/* Dots indicator - responsive sizing and visibility */}
       {maxIndex > 0 && (
-        <div className="flex justify-center mt-3 sm:mt-4 lg:mt-6 space-x-1 sm:space-x-2">
+        <div className="flex justify-center mt-3 sm:mt-4 space-x-1 sm:space-x-2">
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
             <button
               key={index}
@@ -227,7 +229,7 @@ export function TrendingCarousel() {
       )}
 
       {/* Touch/swipe indicators for mobile */}
-      <div className="block sm:hidden text-center mt-2">
+      <div className="block md:hidden text-center mt-2">
         <p className="text-xs text-gray-500">Swipe to see more</p>
       </div>
     </section>
