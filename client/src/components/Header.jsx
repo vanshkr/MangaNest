@@ -3,7 +3,7 @@ import {
   Search,
   Menu,
   X,
-  Play,
+  Book,
   Bell,
   User,
   Bookmark,
@@ -54,7 +54,7 @@ export function Header({ searchQuery, setSearchQuery }) {
             {/* Logo - Always visible */}
             <div className="flex items-center space-x-2 shrink-0">
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <Play className="w-5 h-5 text-white" />
+                <Book className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 MangaNest

@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Play, Plus, Star, Calendar, Clock } from "lucide-react";
+import { Book, Plus, Star, Calendar, Clock } from "lucide-react";
 import { Button } from "./ui/button";
 export const HeroSection = () => {
   return (
@@ -59,7 +59,7 @@ export const HeroSection = () => {
               size="lg"
               className="bg-purple-600 hover:bg-purple-700 text-white px-8 cursor-pointer"
             >
-              <Play className="w-5 h-5 mr-2" />
+              <Book className="w-5 h-5 mr-2" />
               Watch Now
             </Button>
             <Button
