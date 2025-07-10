@@ -69,47 +69,47 @@ export function AnimeGrid({ title }) {
   return (
     <section>
       <div className="flex items-center space-x-2 mb-6">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-amber-300">{title}</h2>
+        <h2 className="text-2xl font-bold text-amber-300">{title}</h2>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
         {animeList.map((episode) => (
           <div
             key={episode.id}
-            className="group bg-inherit border-0 border-b border-gray-500 rounded-none transition-all duration-300 last:border-b-0"
+            className="group bg-inherit border-0 border-b border-gray-500 rounded-none transition-all duration-300"
           >
-            <div className="p-2 sm:p-3">
+            <div className="p-1">
               <div className="flex">
                 <div className="relative flex-shrink-0 flex items-center justify-center">
                   <img
                     src={episode.image}
                     alt={episode.title}
-                    className="w-12 h-16 sm:w-16 sm:h-20 object-cover rounded-md"
+                    className="w-16 h-20 object-cover rounded-md"
                   />
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-md">
                     <Button
                       size="sm"
                       className="bg-purple-600 hover:bg-purple-700"
                     >
-                      <Book className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                      <Book className="w-3 h-3" />
                     </Button>
                   </div>
                 </div>
 
-                <div className="flex-1 pl-3 sm:pl-4 pr-2 py-1 min-w-0">
+                <div className="flex-1 p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-purple-400 transition-colors line-clamp-1">
+                      <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-purple-400 transition-colors">
                         {episode.title}
                       </h3>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-gray-400 mt-2 sm:mt-3">
-                    <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="flex items-center justify-between text-xs text-gray-400 mt-3">
+                    <div className="flex items-center space-x-3">
                       <div className="flex items-center space-x-1">
                         <Clapperboard className="w-3 h-3" />
-                        <span className="whitespace-nowrap">{episode.episodes}</span>
+                        <span>{episode.episodes}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-3 h-3" />
@@ -123,7 +123,7 @@ export function AnimeGrid({ title }) {
           </div>
         ))}
       </div>
-      <Button variant="ghost" className="text-white text-sm sm:text-base mt-4 w-full sm:w-auto">
+      <Button variant="ghost" className="text-white text-md mt-4">
         View All
         <ChevronRight className="w-4 h-4 ml-2" />
       </Button>
