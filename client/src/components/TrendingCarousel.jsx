@@ -7,73 +7,15 @@ import { useState, useEffect } from "react";
 export function TrendingCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(4);
-
-  const trendingAnime = [
-    {
-      id: 1,
-      title: "Demon Slayer",
-      image:
-        "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-      rating: 9.1,
-      rank: "01",
-    },
-    {
-      id: 2,
-      title: "One Piece",
-      image:
-        "https://images.pexels.com/photos/1591056/pexels-photo-1591056.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-      rating: 9.5,
-      rank: "02",
-    },
-    {
-      id: 3,
-      title: "Lord of Mysteries",
-      image:
-        "https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-      rating: 8.9,
-      rank: "03",
-    },
-    {
-      id: 4,
-      title: "New Saga",
-      image:
-        "https://images.pexels.com/photos/1591062/pexels-photo-1591062.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-      rating: 8.8,
-      rank: "04",
-    },
-    {
-      id: 5,
-      title: "Jujutsu Kaisen",
-      image:
-        "https://images.pexels.com/photos/1591063/pexels-photo-1591063.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-      rating: 9.2,
-      rank: "05",
-    },
-    {
-      id: 6,
-      title: "Attack on Titan",
-      image:
-        "https://images.pexels.com/photos/1591064/pexels-photo-1591064.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-      rating: 9.3,
-      rank: "06",
-    },
-    {
-      id: 7,
-      title: "My Hero Academia",
-      image:
-        "https://images.pexels.com/photos/1591065/pexels-photo-1591065.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-      rating: 8.7,
-      rank: "07",
-    },
-    {
-      id: 8,
-      title: "Tokyo Ghoul",
-      image:
-        "https://images.pexels.com/photos/1591066/pexels-photo-1591066.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&fit=crop",
-      rating: 8.5,
-      rank: "08",
-    },
-  ];
+  const [trendingAnime, setTrendingAnime] = useState([]);
+  useEffect(() => {
+    const fetchTrendingAnime = async () => {
+      const response = await fetch("http://localhost:3000/api/manga/trending");
+      const data = await response.json();
+      setTrendingAnime(data);
+    };
+    fetchTrendingAnime();
+  }, []);
 
   // Update items per view based on screen size
   useEffect(() => {
@@ -103,7 +45,10 @@ export function TrendingCarousel() {
     return () => window.removeEventListener("resize", updateItemsPerView);
   }, []);
 
-  const maxIndex = Math.max(0, trendingAnime.length - Math.floor(itemsPerView));
+  const maxIndex = Math.max(
+    0,
+    trendingAnime?.length - Math.floor(itemsPerView)
+  );
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
@@ -148,20 +93,21 @@ export function TrendingCarousel() {
           className="flex transition-transform duration-500 ease-in-out gap-2 sm:gap-3 lg:gap-4"
           style={{
             transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
-            width: `${(trendingAnime.length / itemsPerView) * 100}%`,
+            width: `${(trendingAnime?.length / itemsPerView) * 100}%`,
           }}
         >
-          {trendingAnime.map((anime) => (
+          {trendingAnime?.map((anime, index) => (
             <div
               key={anime.id}
               className="flex-shrink-0"
-              style={{ width: `${100 / trendingAnime.length}%` }}
+              style={{ width: `${100 / trendingAnime?.length}%` }}
             >
               <Card className="group bg-gray-900/50 border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 overflow-hidden h-full">
                 <CardContent className="p-0 relative h-full">
                   <div className="relative aspect-[3/4] sm:aspect-[2/3] lg:aspect-[3/4] overflow-hidden">
                     <img
-                      src={anime.image}
+                      loading="lazy"
+                      src={anime.imageUrl}
                       alt={anime.title}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />
@@ -172,7 +118,7 @@ export function TrendingCarousel() {
                     {/* Rank number - responsive sizing */}
                     <div className="absolute top-2 left-2 sm:top-3 sm:left-3 lg:top-4 lg:left-4">
                       <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white/20 leading-none">
-                        {anime.rank}
+                        {index + 1}
                       </div>
                     </div>
 
@@ -210,21 +156,6 @@ export function TrendingCarousel() {
           ))}
         </div>
       </div>
-
-      {/* Dots indicator - responsive sizing and visibility */}
-      {maxIndex > 0 && (
-        <div className="flex justify-center mt-3 sm:mt-4 lg:mt-6 space-x-1 sm:space-x-2">
-          {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-colors ${
-                index === currentIndex ? "bg-purple-500" : "bg-gray-600"
-              }`}
-            />
-          ))}
-        </div>
-      )}
 
       {/* Touch/swipe indicators for mobile */}
       <div className="block sm:hidden text-center mt-2">

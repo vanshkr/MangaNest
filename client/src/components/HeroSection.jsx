@@ -50,9 +50,9 @@ export const HeroSection = () => {
             </div>
             <div className="flex items-center space-x-1">
               <Clock className="w-4 h-4" />
-              <span>24 min</span>
+              <span>6 Volumes</span>
             </div>
-            <span>87 Episodes</span>
+            <span>87 Chapters</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
@@ -60,7 +60,7 @@ export const HeroSection = () => {
               className="bg-purple-600 hover:bg-purple-700 text-white px-8 cursor-pointer"
             >
               <Book className="w-5 h-5 mr-2" />
-              Watch Now
+              Read Now
             </Button>
             <Button
               size="lg"

@@ -2,7 +2,6 @@ import { Header } from "./components/Header";
 import { HeroSection } from "./components/HeroSection";
 import { TrendingCarousel } from "./components/TrendingCarousel";
 import { RecentEpisodes } from "./components/RecentEpisodes";
-import { TopAnime } from "./components/TopAnime";
 import { AnimeGrid } from "./components/AnimeGrid";
 import { Footer } from "./components/Footer";
 function App() {
