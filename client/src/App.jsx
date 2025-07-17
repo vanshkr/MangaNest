@@ -2,7 +2,7 @@ import { Header } from "./components/Header";
 import { HeroSection } from "./components/HeroSection";
 import { TrendingCarousel } from "./components/TrendingCarousel";
 import { RecentEpisodes } from "./components/RecentEpisodes";
-import { AnimeGrid } from "./components/AnimeGrid";
+import { MangaGrid } from "./components/MangaGrid";
 import { Footer } from "./components/Footer";
 function App() {
   return (
@@ -15,10 +15,10 @@ function App() {
             <TrendingCarousel />
             <section>
               <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <AnimeGrid title="Top Airing" />
-                <AnimeGrid title="Most Popular" />
-                <AnimeGrid title="Most Favorite" />
-                <AnimeGrid title="Latest Completed" />
+                <MangaGrid title="Top Airing" />
+                <MangaGrid title="Most Popular" />
+                <MangaGrid title="Most Favorite" />
+                <MangaGrid title="Latest Completed" />
               </div>
             </section>
             <section>

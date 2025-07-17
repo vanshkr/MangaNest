@@ -7,14 +7,14 @@ import { useState, useEffect } from "react";
 export function TrendingCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(4);
-  const [trendingAnime, setTrendingAnime] = useState([]);
+  const [trendingManga, setTrendingManga] = useState([]);
   useEffect(() => {
-    const fetchTrendingAnime = async () => {
-      const response = await fetch("http://localhost:3000/api/manga/trending");
+    const fetchTrendingManga = async () => {
+      const response = await fetch("http://localhost:3000/api/manga/trendin");
       const data = await response.json();
-      setTrendingAnime(data);
+      setTrendingManga(data);
     };
-    fetchTrendingAnime();
+    fetchTrendingManga();
   }, []);
 
   // Update items per view based on screen size
@@ -47,7 +47,7 @@ export function TrendingCarousel() {
 
   const maxIndex = Math.max(
     0,
-    trendingAnime?.length - Math.floor(itemsPerView)
+    trendingManga?.length - Math.floor(itemsPerView)
   );
 
   const nextSlide = () => {
@@ -93,22 +93,22 @@ export function TrendingCarousel() {
           className="flex transition-transform duration-500 ease-in-out gap-2 sm:gap-3 lg:gap-4"
           style={{
             transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
-            width: `${(trendingAnime?.length / itemsPerView) * 100}%`,
+            width: `${(trendingManga?.length / itemsPerView) * 100}%`,
           }}
         >
-          {trendingAnime?.map((anime, index) => (
+          {trendingManga?.map((manga, index) => (
             <div
-              key={anime.id}
+              key={manga.id}
               className="flex-shrink-0"
-              style={{ width: `${100 / trendingAnime?.length}%` }}
+              style={{ width: `${100 / trendingManga?.length}%` }}
             >
               <Card className="group bg-gray-900/50 border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 overflow-hidden h-full">
                 <CardContent className="p-0 relative h-full">
                   <div className="relative aspect-[3/4] sm:aspect-[2/3] lg:aspect-[3/4] overflow-hidden">
                     <img
                       loading="lazy"
-                      src={anime.imageUrl}
-                      alt={anime.title}
+                      src={manga.imageUrl}
+                      alt={manga.title}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />
 
@@ -129,7 +129,7 @@ export function TrendingCarousel() {
                         className="bg-black/70 text-white text-xs sm:text-sm"
                       >
                         <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5 sm:mr-1 fill-yellow-400 text-yellow-400" />
-                        {anime.rating}
+                        {manga.rating}
                       </Badge>
                     </div>
 
@@ -146,7 +146,7 @@ export function TrendingCarousel() {
                     {/* Title at bottom - responsive sizing */}
                     <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 lg:p-4">
                       <h3 className="text-white font-bold text-sm sm:text-base lg:text-lg leading-tight group-hover:text-purple-400 transition-colors line-clamp-2">
-                        {anime.title}
+                        {manga.title}
                       </h3>
                     </div>
                   </div>

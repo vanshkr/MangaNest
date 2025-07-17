@@ -2,8 +2,8 @@ import { Book, Calendar, Clapperboard, ChevronRight } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
-export function AnimeGrid({ title }) {
-  const animeList = [
+export function MangaGrid({ title }) {
+  const mangaList = [
     {
       id: 1,
       title: "Demon Slayer",
@@ -54,16 +54,6 @@ export function AnimeGrid({ title }) {
       episodes: 138,
       status: "Ongoing",
     },
-    {
-      id: 6,
-      title: "Tokyo Ghoul",
-      image:
-        "https://images.pexels.com/photos/1591064/pexels-photo-1591064.jpeg?auto=compress&cs=tinysrgb&w=400&h=600&fit=crop",
-      rating: 8.2,
-      year: 2023,
-      episodes: 48,
-      status: "Completed",
-    },
   ];
 
   return (
@@ -73,7 +63,7 @@ export function AnimeGrid({ title }) {
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        {animeList.map((episode) => (
+        {mangaList.map((episode) => (
           <div
             key={episode.id}
             className="group bg-inherit border-0 border-b border-gray-500 rounded-none transition-all duration-300"
@@ -107,10 +97,6 @@ export function AnimeGrid({ title }) {
 
                   <div className="flex items-center justify-between text-xs text-gray-400 mt-3">
                     <div className="flex items-center space-x-3">
-                      <div className="flex items-center space-x-1">
-                        <Clapperboard className="w-3 h-3" />
-                        <span>{episode.episodes}</span>
-                      </div>
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-3 h-3" />
                         <span>{episode.year}</span>

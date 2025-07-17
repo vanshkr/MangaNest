@@ -4,7 +4,7 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
 export function RecentEpisodes() {
-  const animeList = [
+  const mangaList = [
     {
       id: 1,
       title: "Demon Slayer: Kimetsu no Yaiba",
@@ -68,16 +68,16 @@ export function RecentEpisodes() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {animeList.map((anime) => (
+        {mangaList.map((manga) => (
           <Card
-            key={anime.id}
+            key={manga.id}
             className="group bg-gray-800/50 border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105"
           >
             <CardContent className="p-0">
               <div className="relative aspect-[3/4] overflow-hidden rounded-t-lg">
                 <img
-                  src={anime.image}
-                  alt={anime.title}
+                  src={manga.image}
+                  alt={manga.title}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -95,25 +95,25 @@ export function RecentEpisodes() {
                     className="bg-black/70 text-white text-xs sm:text-sm"
                   >
                     <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5 sm:mr-1 fill-yellow-400 text-yellow-400" />
-                    {anime.rating}
+                    {manga.rating}
                   </Badge>
                 </div>
               </div>
               <div className="p-2">
                 <div className="mb-3">
                   <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-purple-400 transition-colors">
-                    {anime.title}
+                    {manga.title}
                   </h3>
                   <p className="text-gray-400 text-xs line-clamp-1">
-                    {anime.episodeTitle}
+                    {manga.episodeTitle}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between text-sm text-gray-400">
                   <div className="flex items-center space-x-1">
-                    <span>{anime.episode}</span>
+                    <span>{manga.episode}</span>
                   </div>
-                  <span>{anime.duration}</span>
+                  <span>{manga.duration}</span>
                 </div>
               </div>
             </CardContent>

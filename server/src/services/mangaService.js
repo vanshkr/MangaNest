@@ -68,7 +68,7 @@ export const getTopAiringManga = async (limit) => {
     console.log(manga.attributes);
     return {
       id: manga.id,
-      title: manga.attributes.altTitles?.filter((title) => "en" in title)[0].en,
+      title: manga.attributes.altTitles?.find((title) => "en" in title).en,
       year: manga.attributes.year,
       imageUrl: getImageUrl(manga.relationships, manga.id, 256),
     };
