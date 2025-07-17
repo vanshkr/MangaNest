@@ -7,8 +7,10 @@ export const getTrendingManga = async (limit, monthsAgo) => {
   const url =
     `${process.env.MANGA_API_URL}/manga?limit=${limit}` +
     `&createdAtSince=${sinceDate}` +
-    `&order[followedCount]=desc` +
+    `&order[createdAt]=desc` +
+    `&order[year]=desc` +
     `&includes[]=cover_art` +
+    `&includes[]=manga` +
     `&contentRating[]=safe`;
 
   const res = await fetch(url);
@@ -19,7 +21,6 @@ export const getTrendingManga = async (limit, monthsAgo) => {
     return {
       id: manga.id,
       title: manga.attributes.title.en,
-      altTitle: Object.values(manga.attributes.altTitles[0])[0],
       rating: undefined, // Placeholder for rating, to be fetched separately
       imageUrl: getImageUrl(manga.relationships, manga.id, 256),
     };
