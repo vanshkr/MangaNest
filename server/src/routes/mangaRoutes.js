@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { trending } from "../controllers/mangaController.js";
+import { trending, airing } from "../controllers/mangaController.js";
 const router = Router();
 
 router.get("/trending", trending);
+router.get("/top-airing", airing);
 export default router;

@@ -53,3 +53,24 @@ export const getMangaRating = async (mangaIds) => {
   }
   return result;
 };
+
+export const getTopAiringManga = async (limit) => {
+  const url =
+    `${process.env.MANGA_API_URL}/manga?limit=${limit}` +
+    `&order[followedCount]=desc&status[]=ongoing&availableTranslatedLanguage[]=en&order[year]=desc&includes[]=cover_art` +
+    `&includes[]=manga&contentRating[]=safe`;
+
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`MangaDex ${res.status}: ${await res.text()}`);
+
+  const json = await res.json();
+  return json.data.map((manga) => {
+    console.log(manga.attributes);
+    return {
+      id: manga.id,
+      title: manga.attributes.altTitles?.filter((title) => "en" in title)[0].en,
+      year: manga.attributes.year,
+      imageUrl: getImageUrl(manga.relationships, manga.id, 256),
+    };
+  });
+};
