@@ -10,7 +10,7 @@ export function TrendingCarousel() {
   const [trendingManga, setTrendingManga] = useState([]);
   useEffect(() => {
     const fetchTrendingManga = async () => {
-      const response = await fetch("http://localhost:3000/api/manga/trendin");
+      const response = await fetch("http://localhost:3000/api/manga/trending");
       const data = await response.json();
       setTrendingManga(data);
     };
