@@ -1,8 +1,9 @@
-import { Book, Calendar, Clapperboard, ChevronRight } from "lucide-react";
-import { Badge } from "./ui/badge";
+import { Book, Calendar, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
-export function MangaGrid({ title, mangaList }) {
+export function MangaGrid({ title, mangaList, link }) {
+  const navigate = useNavigate();
   return (
     <section>
       <div className="flex items-center space-x-2 mb-6">
@@ -56,7 +57,13 @@ export function MangaGrid({ title, mangaList }) {
           </div>
         ))}
       </div>
-      <Button variant="ghost" className="text-white text-md mt-4">
+      <Button
+        variant="ghost"
+        className="text-white text-md mt-4 cursor-pointer"
+        onClick={() => {
+          navigate(link);
+        }}
+      >
         View All
         <ChevronRight className="w-4 h-4 ml-2" />
       </Button>

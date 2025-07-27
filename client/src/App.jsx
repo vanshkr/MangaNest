@@ -1,29 +1,31 @@
-import { Header } from "./components/Header";
-import { HeroSection } from "./components/HeroSection";
-import { TrendingCarousel } from "./components/TrendingCarousel";
-import { RecentEpisodes } from "./components/RecentEpisodes";
-import { MangaSection } from "./components/MangaSection";
-import { Footer } from "./components/Footer";
+import { Rotate3D } from "lucide-react";
+import { Layout } from "./layouts/layout";
+import {
+  Home,
+  TopAiring,
+  MostPopular,
+  RecentlyCompleted,
+  LatestReleases,
+  HiddenGems,
+  MangaDetail,
+  MangaView,
+  MangaBrowse,
+} from "./pages";
+import { Routes, Route } from "react-router-dom";
 function App() {
   return (
-    <>
-      <div className="min-h-screen w-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 ">
-        <Header />
-        <main>
-          <HeroSection />
-          <div className="container mx-auto px-4 py-8 space-y-12">
-            <TrendingCarousel />
-            <section>
-              <MangaSection />
-            </section>
-            <section>
-              <RecentEpisodes />
-            </section>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    </>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="/manga/:id" element={<MangaDetail />} />
+        <Route path="/top-airing" element={<TopAiring />} />
+        <Route path="/most-popular" element={<MostPopular />} />
+        <Route path="/recently-completed" element={<RecentlyCompleted />} />
+        <Route path="/hidden-gems" element={<HiddenGems />} />
+        <Route path="/latest-release" element={<LatestReleases />} />
+        <Route path="/browse" element={<MangaBrowse />} />
+      </Route>
+    </Routes>
   );
 }
 
