@@ -210,10 +210,7 @@ export function RecentEpisodes() {
           View All
         </Button>
       </div>
-      <MangaContentGrid
-        contentHeading={"Latest Release"}
-        mangaList={mangaList}
-      />
+      <MangaContentGrid mangaList={mangaList} />
     </section>
   );
 }

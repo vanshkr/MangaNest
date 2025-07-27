@@ -8,3 +8,4 @@ export { TrendingCarousel } from "./TrendingCarousel";
 export { TopManga } from "./TopManga";
 export { RecentEpisodes } from "./RecentEpisodes";
 export { Pagination } from "./Pagination";
+export { ScrollToTop } from "./ScrollToTop";
