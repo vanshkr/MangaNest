@@ -150,7 +150,6 @@ export const HeroSection = () => {
           <button
             key={index}
             onClick={() => {
-              console.log(index);
               swiperRef.current?.slideToLoop(index);
             }}
             className={`w-3 h-3 rounded-full transition-all duration-300 hover:scale-125 ${

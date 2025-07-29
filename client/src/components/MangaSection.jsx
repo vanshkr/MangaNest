@@ -23,22 +23,22 @@ export const MangaSection = () => {
     <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <MangaGrid
         title="Top Airing"
-        mangaList={mangaData.airingData}
+        mangaList={mangaData.airingData.data}
         link="/top-airing"
       />
       <MangaGrid
         title="Most Popular"
-        mangaList={mangaData.popularData}
+        mangaList={mangaData.popularData.data}
         link="/most-popular"
       />
       <MangaGrid
         title="Hidden Gems"
-        mangaList={mangaData.hiddenGemsData}
+        mangaList={mangaData.hiddenGemsData.data}
         link="/hidden-gems"
       />
       <MangaGrid
         title="Recently Completed"
-        mangaList={mangaData.recentlyCompletedData}
+        mangaList={mangaData.recentlyCompletedData.data}
         link="/recently-completed"
       />
     </div>

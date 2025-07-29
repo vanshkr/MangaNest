@@ -6,6 +6,6 @@ export { MangaGrid } from "./MangaGrid";
 export { MangaSection } from "./MangaSection";
 export { TrendingCarousel } from "./TrendingCarousel";
 export { TopManga } from "./TopManga";
-export { RecentEpisodes } from "./RecentEpisodes";
+export { RecentReleases } from "./RecentReleases";
 export { Pagination } from "./Pagination";
 export { ScrollToTop } from "./ScrollToTop";

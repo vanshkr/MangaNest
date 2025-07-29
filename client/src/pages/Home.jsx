@@ -2,7 +2,7 @@ import {
   HeroSection,
   TrendingCarousel,
   MangaSection,
-  RecentEpisodes,
+  RecentReleases,
 } from "@/components";
 export const Home = () => {
   return (
@@ -14,7 +14,7 @@ export const Home = () => {
           <MangaSection />
         </section>
         <section>
-          <RecentEpisodes />
+          <RecentReleases />
         </section>
       </div>
     </main>

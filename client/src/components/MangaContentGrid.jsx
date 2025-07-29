@@ -1,7 +1,7 @@
-import { Book, Star, Calendar } from "lucide-react";
+import { Book } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
-import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { useEffect } from "react";
 
 export function MangaContentGrid({ mangaList }) {
   return (
@@ -14,7 +14,7 @@ export function MangaContentGrid({ mangaList }) {
           <CardContent className="p-0 sm:h-[80%] md:h-[65%] lg:h-[50%]">
             <div className="relative aspect-[3/4] overflow-hidden rounded-t-lg">
               <img
-                src={manga.image}
+                src={manga.imageUrl}
                 alt={manga.title}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:blur-sm"
               />
@@ -29,12 +29,12 @@ export function MangaContentGrid({ mangaList }) {
               </div>
             </div>
             <div className="p-2">
-              <div className="mb-3">
-                <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-purple-400 transition-colors line-clamp-1">
+              <div className="-mb-2">
+                <h3 className="font-semibold text-white text-md mb-1 group-hover:text-purple-400 transition-colors line-clamp-1">
                   {manga.title}
                 </h3>
-                <p className="text-gray-400 text-xs line-clamp-1">
-                  {manga.episodeTitle}
+                <p className="text-gray-400 text-sm line-clamp-3">
+                  {manga.desc}
                 </p>
               </div>
             </div>
