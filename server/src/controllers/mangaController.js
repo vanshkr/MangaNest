@@ -6,6 +6,7 @@ import {
   getHiddenGemsManga,
   getRecentlyCompletedManga,
   getLatestReleases,
+  getMangaDetails,
 } from "../services/mangaService.js";
 import { getPaginationParams } from "../utils/pagination.js";
 
@@ -62,5 +63,11 @@ export const latestReleases = asyncHandler(async (req, res) => {
   const { limit, page } = getPaginationParams(req.query.limit, req.query.page);
   const offset = (page - 1) * limit;
   const data = await getLatestReleases(limit, offset);
+  res.json(data);
+});
+
+export const mangaDetails = asyncHandler(async (req, res) => {
+  const mangaId = req.params.mangaId;
+  const data = await getMangaDetails(mangaId);
   res.json(data);
 });

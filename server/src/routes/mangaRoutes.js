@@ -7,6 +7,7 @@ import {
   popular,
   hiddenGems,
   latestReleases,
+  mangaDetails,
 } from "../controllers/mangaController.js";
 const router = Router();
 
@@ -17,4 +18,5 @@ router.get("/most-popular", popular);
 router.get("/hidden-gems", hiddenGems);
 router.get("/recently-completed", recentlyCompleted);
 router.get("/latest-releases", latestReleases);
+router.get("/:mangaId", mangaDetails);
 export default router;

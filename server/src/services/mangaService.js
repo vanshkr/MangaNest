@@ -1,5 +1,6 @@
 import { getUtcDateString } from "../utils/date.js";
 import { getImageUrl } from "../utils/imageURL.js";
+import { getAuthorName } from "../utils/authorName.js";
 
 export const getTrendingManga = async (limit, monthsAgo) => {
   try {
@@ -304,5 +305,92 @@ export const getLatestReleases = async (limit, offset = 0) => {
   } catch (error) {
     console.error("Failed to get latest releases manga:", error);
     return mangas;
+  }
+};
+
+export const getMangaDetails = async (mangaId, limit = 20, offset = 0) => {
+  try {
+    const mangaDetailsUrl = `${process.env.MANGA_API_URL}/manga/${mangaId}?&includes[]=cover_art`;
+    const mangaStatsUrl = `${process.env.MANGA_API_URL}/statistics/manga/${mangaId}`;
+    const mangaChaptersUrl = `${process.env.MANGA_API_URL}/chapter?manga=${mangaId}&limit=${limit}&offset=${offset}&order[chapter]=desc`;
+
+    const [detailsRes, statsRes, chapterRes] = await Promise.all([
+      fetch(mangaDetailsUrl),
+      fetch(mangaStatsUrl),
+      fetch(mangaChaptersUrl),
+    ]);
+    if (!detailsRes.ok)
+      throw new Error(
+        `MangaDex ${detailsRes.status}: ${await detailsRes.text()}`
+      );
+    if (!statsRes.ok)
+      throw new Error(`MangaDex ${statsRes.status}: ${await statsRes.text()}`);
+    if (!chapterRes.ok)
+      throw new Error(
+        `MangaDex ${chapterRes.status}: ${await chapterRes.text()}`
+      );
+
+    const [detailsJson, statsJson, chapterJson] = await Promise.all([
+      detailsRes.json(),
+      statsRes.json(),
+      chapterRes.json(),
+    ]);
+    const author = await getAuthorName(detailsJson.data.relationships);
+    const details = {
+      id: detailsJson.data.id,
+      title: detailsJson.data.attributes.title?.en || "Unknown Title",
+      altTitle:
+        detailsJson.data.attributes.altTitles?.find(
+          (altTitle) => "ja" in altTitle
+        )?.ja || "Unknown AltTitle",
+      coverImageUrl: getImageUrl(
+        detailsJson.data.relationships,
+        detailsJson.data.id,
+        256
+      ),
+      author: author,
+      desc: detailsJson.data.attributes.description.en,
+      demographic: detailsJson.data.attributes.publicationDemographic,
+      status: detailsJson.data.attributes.status,
+      year: detailsJson.data.attributes.year,
+      contentRating: detailsJson.data.attributes.contentRating,
+      tags: detailsJson.data.attributes.tags.reduce((acc, curr) => {
+        let key = curr["attributes"]["group"];
+        let value = curr["attributes"]["name"]["en"];
+
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(value);
+
+        return acc;
+      }, {}),
+      rating: parseFloat(
+        statsJson?.statistics[mangaId].rating?.bayesian
+      ).toFixed(1),
+      follows: statsJson?.statistics[mangaId].follows,
+      lastUpdated: new Date(detailsJson.data.attributes.updatedAt),
+    };
+    const seen = new Set();
+    const chapters = chapterJson.data.reduce((acc, curr) => {
+      const chapter = Number(curr.attributes.chapter);
+      if (!seen.has(chapter)) {
+        acc.push({
+          pages: curr.attributes.pages,
+          date: new Date(curr.attributes.readableAt).toLocaleDateString(),
+          chapter: chapter,
+          chapterId: curr.id,
+        });
+        seen.add(chapter);
+      }
+      return acc;
+    }, []);
+    return {
+      details,
+      chapters,
+    };
+  } catch (error) {
+    console.error("Failed to get latest releases manga:", error);
+    return {};
   }
 };
