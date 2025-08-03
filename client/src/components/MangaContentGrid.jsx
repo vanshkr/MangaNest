@@ -1,9 +1,10 @@
 import { Book } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function MangaContentGrid({ mangaList }) {
+  const navigate = useNavigate();
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {mangaList.map((manga, index) => (
@@ -29,7 +30,12 @@ export function MangaContentGrid({ mangaList }) {
               </div>
             </div>
             <div className="p-2">
-              <div className="-mb-2">
+              <div
+                className="-mb-2 cursor-pointer"
+                onClick={() => {
+                  navigate(`/manga/${manga.id}`);
+                }}
+              >
                 <h3 className="font-semibold text-white text-md mb-1 group-hover:text-purple-400 transition-colors line-clamp-1">
                   {manga.title}
                 </h3>

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { mangaList } from "@/constants/heroSectionManga";
+import { useNavigate } from "react-router-dom";
 
 // Import Swiper styles
 import "swiper/css";
@@ -24,6 +25,7 @@ export const HeroSection = () => {
   const swiperRef = useRef(0);
   const heroSlides = mangaList;
   const [activeIndex, setActiveIndex] = useState(0);
+  const navigate = useNavigate();
 
   return (
     <section className="relative h-[70vh] overflow-hidden">
@@ -60,9 +62,13 @@ export const HeroSection = () => {
                 className="w-full h-full object-cover absolute inset-0 transition-transform duration-700 hover:scale-105"
                 draggable={false}
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
-
+              <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url(${slide.backgroundImage})` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+              </div>
               {/* Content */}
               <div className="relative z-10 container mx-auto px-4">
                 <div className="max-w-2xl">
@@ -84,7 +90,12 @@ export const HeroSection = () => {
                       </Badge>
                     ))}
                   </div>
-                  <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 leading-tight">
+                  <h1
+                    className="text-4xl md:text-5xl font-bold text-white mb-2 leading-tight cursor-pointer"
+                    onClick={() => {
+                      navigate(`/manga/${slide.id}`);
+                    }}
+                  >
                     {slide.title}
                   </h1>
                   <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">

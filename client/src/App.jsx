@@ -7,7 +7,6 @@ import {
   LatestReleases,
   HiddenGems,
   MangaDetail,
-  MangaView,
   MangaBrowse,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
@@ -20,7 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="manga/:id" element={<MangaDetail />} />
+          <Route path="manga/:mangaId" element={<MangaDetail />} />
           <Route path="top-airing" element={<TopAiring />} />
           <Route path="most-popular" element={<MostPopular />} />
           <Route path="recently-completed" element={<RecentlyCompleted />} />

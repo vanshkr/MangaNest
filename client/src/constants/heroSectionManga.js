@@ -87,7 +87,7 @@ export const mangaList = [
     description:
       "Gokurakugai, a bright and bustling working class district with a hidden dark side. In this area without order, Tao and Alma work as troubleshooters for hire...",
     backgroundImage:
-      "https://mangadex.org/covers/d65c0332-3764-4c89-84bd-b1a4e7278ad7/36e6055b-d8fd-43d9-bf7f-c40b5ec258ad.jpg",
+      "https://mangadex.org/covers/40c058a2-430e-4ced-b663-369dcf38583f/3f510491-cad8-4bf8-8f27-2a17306f5e26.jpg",
     genres: ["Action", "Comedy", "Crime", "Drama"],
   },
   {

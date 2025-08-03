@@ -1,9 +1,8 @@
-import {
-  HeroSection,
-  TrendingCarousel,
-  MangaSection,
-  RecentReleases,
-} from "@/components";
+import { HeroSection, TrendingCarousel, MangaSection } from "@/components";
+import { lazy, Suspense } from "react";
+const RecentReleases = lazy(() =>
+  import("@/components").then((module) => ({ default: module.RecentReleases }))
+);
 export const Home = () => {
   return (
     <main>
@@ -14,7 +13,11 @@ export const Home = () => {
           <MangaSection />
         </section>
         <section>
-          <RecentReleases />
+          {
+            <Suspense fallback={<div>Loading Recent Releases...</div>}>
+              <RecentReleases />
+            </Suspense>
+          }
         </section>
       </div>
     </main>

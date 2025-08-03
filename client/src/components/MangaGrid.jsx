@@ -37,7 +37,12 @@ export function MangaGrid({ title, mangaList, link }) {
                 <div className="flex-1 p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-purple-400 transition-colors line-clamp-1">
+                      <h3
+                        className="font-semibold text-white text-sm mb-1 group-hover:text-purple-400 transition-colors line-clamp-1 cursor-pointer"
+                        onClick={() => {
+                          navigate(`/manga/${manga.id}`);
+                        }}
+                      >
                         {manga.title}
                       </h3>
                     </div>

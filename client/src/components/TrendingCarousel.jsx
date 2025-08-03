@@ -18,10 +18,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/free-mode";
 import "swiper/css/free-mode";
+import { useNavigate } from "react-router-dom";
 
 export function TrendingCarousel() {
   const [trendingManga, setTrendingManga] = useState([]);
   const [swiperRef, setSwiperRef] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTrendingManga = async () => {
@@ -174,7 +176,12 @@ export function TrendingCarousel() {
 
                     {/* Title at bottom - responsive sizing */}
                     <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 lg:p-4">
-                      <h3 className="text-white font-bold text-sm sm:text-base lg:text-lg leading-tight group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 line-clamp-2 drop-shadow-lg">
+                      <h3
+                        className="text-white font-bold text-sm sm:text-base lg:text-lg leading-tight group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 line-clamp-2 drop-shadow-lg cursor-pointer"
+                        onClick={() => {
+                          navigate(`/manga/${manga.id}`);
+                        }}
+                      >
                         {manga.title}
                       </h3>
                     </div>
