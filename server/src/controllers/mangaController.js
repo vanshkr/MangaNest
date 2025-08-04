@@ -7,6 +7,7 @@ import {
   getRecentlyCompletedManga,
   getLatestReleases,
   getMangaDetails,
+  getChapterPanels,
 } from "../services/mangaService.js";
 import { getPaginationParams } from "../utils/pagination.js";
 
@@ -69,5 +70,11 @@ export const latestReleases = asyncHandler(async (req, res) => {
 export const mangaDetails = asyncHandler(async (req, res) => {
   const mangaId = req.params.mangaId;
   const data = await getMangaDetails(mangaId);
+  res.json(data);
+});
+
+export const chapterPanels = asyncHandler(async (req, res) => {
+  const chapterId = req.params.chapterId;
+  const data = await getChapterPanels(chapterId);
   res.json(data);
 });

@@ -115,7 +115,7 @@ export const getTopAiringManga = async (
     }
   } catch (error) {
     console.error("Failed to get top airing manga:", error);
-    return mangas;
+    return {};
   }
 };
 
@@ -167,7 +167,7 @@ export const getPopularManga = async (
     }
   } catch (error) {
     console.error("Failed to get popular manga:", error);
-    return mangas;
+    return {};
   }
 };
 
@@ -220,7 +220,7 @@ export const getHiddenGemsManga = async (
     }
   } catch (error) {
     console.error("Failed to get recently completed manga:", error);
-    return mangas;
+    return {};
   }
 };
 
@@ -273,7 +273,7 @@ export const getRecentlyCompletedManga = async (
     }
   } catch (error) {
     console.error("Failed to get recently completed manga:", error);
-    return mangas;
+    return {};
   }
 };
 
@@ -304,7 +304,7 @@ export const getLatestReleases = async (limit, offset = 0) => {
     return mangas;
   } catch (error) {
     console.error("Failed to get latest releases manga:", error);
-    return mangas;
+    return {};
   }
 };
 
@@ -392,5 +392,21 @@ export const getMangaDetails = async (mangaId, limit = 20, offset = 0) => {
   } catch (error) {
     console.error("Failed to get latest releases manga:", error);
     return {};
+  }
+};
+
+export const getChapterPanels = async (chapterId) => {
+  const url = `${process.env.MANGA_API_URL}/at-home/server/${chapterId}`;
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
+
+    const chapterPanels = json.chapter.dataSaver.map(
+      (panel) => `${json.baseUrl}/data-saver/${json.chapter.hash}/${panel}`
+    );
+    return chapterPanels;
+  } catch (error) {
+    console.log("Failed to get chapter panels:", error);
+    return;
   }
 };
