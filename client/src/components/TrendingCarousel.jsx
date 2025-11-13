@@ -19,17 +19,23 @@ import "swiper/css/navigation";
 import "swiper/css/free-mode";
 import "swiper/css/free-mode";
 import { useNavigate } from "react-router-dom";
+import { API_ENDPOINTS, fetchWithErrorHandling } from "@/config/api";
 
 export function TrendingCarousel() {
   const [trendingManga, setTrendingManga] = useState([]);
   const [swiperRef, setSwiperRef] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTrendingManga = async () => {
-      const response = await fetch("http://localhost:3000/api/manga/trending");
-      const data = await response.json();
-      setTrendingManga(data);
+      try {
+        const data = await fetchWithErrorHandling(API_ENDPOINTS.trending);
+        setTrendingManga(data);
+      } catch (err) {
+        console.error("Failed to fetch trending manga:", err);
+        setError("Failed to load trending manga");
+      }
     };
     fetchTrendingManga();
   }, []);
@@ -45,6 +51,16 @@ export function TrendingCarousel() {
       swiperRef.slideNext();
     }
   };
+
+  if (error) {
+    return (
+      <section className="relative">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-red-400 text-lg">{error}</div>
+        </div>
+      </section>
+    );
+  }
 
   if (!trendingManga.length) {
     return (
