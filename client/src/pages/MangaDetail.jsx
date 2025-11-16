@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import { API_ENDPOINTS, fetchWithErrorHandling } from "@/config/api";
 
 export const MangaDetail = () => {
@@ -30,6 +30,43 @@ export const MangaDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const params = useParams();
+  const navigate = useNavigate();
+
+  // Get reading progress from localStorage
+  const getLastReadChapter = () => {
+    const allKeys = Object.keys(localStorage);
+    const progressKeys = allKeys.filter(key =>
+      key.startsWith(`progress_${params.mangaId}_`)
+    );
+    if (progressKeys.length > 0) {
+      // Get the most recent progress
+      const latestKey = progressKeys[progressKeys.length - 1];
+      const chapterId = latestKey.replace(`progress_${params.mangaId}_`, '');
+      return chapterId;
+    }
+    return null;
+  };
+
+  const handleStartReading = () => {
+    if (chaptersData && chaptersData.length > 0) {
+      // Start from the last chapter (assuming chapters are sorted newest first)
+      const firstChapter = chaptersData[chaptersData.length - 1];
+      navigate(`/manga/${params.mangaId}/read/${firstChapter.chapterId}`);
+    }
+  };
+
+  const handleContinueReading = () => {
+    const lastReadChapterId = getLastReadChapter();
+    if (lastReadChapterId) {
+      navigate(`/manga/${params.mangaId}/read/${lastReadChapterId}`);
+    } else {
+      handleStartReading();
+    }
+  };
+
+  const handleReadChapter = (chapterId) => {
+    navigate(`/manga/${params.mangaId}/read/${chapterId}`);
+  };
 
   useEffect(() => {
     const fetchMangaDetails = async () => {
@@ -177,15 +214,19 @@ export const MangaDetail = () => {
             {/* Quick Actions */}
             <div className="flex flex-wrap gap-3">
               <Button
+                onClick={handleStartReading}
+                disabled={!chaptersData || chaptersData.length === 0}
                 size="lg"
-                className="bg-purple-600 hover:bg-purple-700 text-white px-8 shadow-lg hover:shadow-xl transition-all duration-200 border-0"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-8 shadow-lg hover:shadow-xl transition-all duration-200 border-0 disabled:bg-gray-600 disabled:cursor-not-allowed"
               >
                 <Play className="w-5 h-5 mr-2" />
                 Start Reading
               </Button>
               <Button
+                onClick={handleContinueReading}
+                disabled={!chaptersData || chaptersData.length === 0}
                 size="lg"
-                className="bg-purple-600 hover:bg-purple-700 text-white px-8 shadow-lg hover:shadow-xl transition-all duration-200 border-0"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-8 shadow-lg hover:shadow-xl transition-all duration-200 border-0 disabled:bg-gray-600 disabled:cursor-not-allowed"
               >
                 <BookOpen className="w-5 h-5 mr-2" />
                 Continue Reading
@@ -272,6 +313,7 @@ export const MangaDetail = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             <Button
+                              onClick={() => handleReadChapter(chapter.chapterId)}
                               variant="ghost"
                               size="sm"
                               className="text-purple-300 hover:text-white hover:bg-purple-600/20"
@@ -283,6 +325,9 @@ export const MangaDetail = () => {
                       </CardContent>
                     </Card>
                   ))}
+                </div>
+                <div className=" text-center text-purple-300 hover:text-purple-200 cursor-pointer">
+                  ▼ Show more
                 </div>
               </TabsContent>
 
