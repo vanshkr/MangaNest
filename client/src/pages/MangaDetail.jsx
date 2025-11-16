@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useParams } from "react-router-dom";
+import { API_ENDPOINTS, fetchWithErrorHandling } from "@/config/api";
 
 export const MangaDetail = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -26,19 +27,50 @@ export const MangaDetail = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [mangaDetails, setMangaDetails] = useState({});
   const [chaptersData, setChaptersData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const params = useParams();
+
   useEffect(() => {
     const fetchMangaDetails = async () => {
-      const response = await fetch(
-        `http://localhost:3000/api/manga/${params.mangaId}`
-      );
-      const data = await response.json();
-      console.log(params.mangaId, data);
-      setMangaDetails(data.details);
-      setChaptersData(data.chapters);
+      try {
+        setLoading(true);
+        const data = await fetchWithErrorHandling(
+          API_ENDPOINTS.mangaDetail(params.mangaId)
+        );
+        console.log(params.mangaId, data);
+        setMangaDetails(data.details);
+        setChaptersData(data.chapters);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to fetch manga details:", err);
+        setError("Failed to load manga details. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchMangaDetails();
-  }, []);
+  }, [params.mangaId]);
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-red-400 text-lg">{error}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-white text-lg">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
       {/* Hero Section */}

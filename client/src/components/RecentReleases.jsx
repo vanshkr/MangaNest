@@ -2,19 +2,37 @@ import { MangaContentGrid } from "./MangaContentGrid";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { API_ENDPOINTS, fetchWithErrorHandling } from "@/config/api";
+
 export function RecentReleases() {
   const [mangaList, setMangaList] = useState([]);
-  useEffect(() => {
-    const fetchTopAiring = async () => {
-      const response = await fetch(
-        `http://localhost:3000/api/manga/latest-releases?limit=${25}`
-      );
-      const data = await response.json();
-      setMangaList(data.data);
-    };
-    fetchTopAiring();
-  }, []);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchLatestReleases = async () => {
+      try {
+        const data = await fetchWithErrorHandling(
+          `${API_ENDPOINTS.latestReleases}?limit=25`
+        );
+        setMangaList(data.data);
+      } catch (err) {
+        console.error("Failed to fetch latest releases:", err);
+        setError("Failed to load latest releases");
+      }
+    };
+    fetchLatestReleases();
+  }, []);
+  if (error) {
+    return (
+      <section>
+        <div className="flex items-center justify-center py-12">
+          <div className="text-red-400 text-lg">{error}</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section>
       <div className="flex items-center justify-between mb-6">
