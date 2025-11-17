@@ -13,3 +13,4 @@ export { Favorites } from "./Favorites";
 export { Login } from "./Login";
 export { Register } from "./Register";
 export { RoomCreate } from "./RoomCreate";
+export { RoomList } from "./RoomList";

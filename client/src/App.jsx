@@ -15,6 +15,7 @@ import {
   Login,
   Register,
   RoomCreate,
+  RoomList,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
 import { ScrollToTop, ProtectedRoute } from "./components";
@@ -50,6 +51,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="rooms" element={<RoomList />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
