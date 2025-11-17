@@ -13,15 +13,19 @@ import {
   Shuffle,
   Sun,
   Moon,
+  Heart,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext";
+import { UserProfileMenu } from "./UserProfileMenu";
+import { useAuth } from "../contexts/AuthContext";
 
 export function Header() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { isAuthenticated, user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -146,13 +150,9 @@ export function Header() {
               >
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="hidden sm:flex text-purple-300 hover:text-purple-500 hover:bg-purple-500/10 rounded-md"
-              >
-                <User className="w-4 h-4" />
-              </Button>
+              <div className="hidden sm:block">
+                <UserProfileMenu />
+              </div>
 
               {/* Hamburger Menu - Only visible on mobile and tablet */}
               <Button
@@ -230,14 +230,25 @@ export function Header() {
                 <Bell className="w-5 h-5" />
                 <span>Notifications</span>
               </a>
-              <a
-                href="#"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-800 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <User className="w-5 h-5" />
-                <span>Profile</span>
-              </a>
+              {isAuthenticated ? (
+                <Link
+                  to="/profile/settings"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-800 transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <User className="w-5 h-5" />
+                  <span>Profile ({user?.username})</span>
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-purple-400 hover:bg-gray-800 transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <User className="w-5 h-5" />
+                  <span>Login</span>
+                </Link>
+              )}
             </div>
           </div>
         </div>

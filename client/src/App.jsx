@@ -12,6 +12,8 @@ import {
   SearchResults,
   NotFound,
   Favorites,
+  Login,
+  Register,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
 import { ScrollToTop } from "./components";
@@ -22,6 +24,11 @@ function App() {
     <ErrorBoundary>
       <ScrollToTop />
       <Routes>
+        {/* Auth routes - outside of Layout for full-page design */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Main app routes - inside Layout */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="search" element={<SearchResults />} />

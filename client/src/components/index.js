@@ -23,3 +23,4 @@ export {
 } from "./Skeleton";
 export { default as ErrorBoundary } from "./ErrorBoundary";
 export { ProtectedRoute } from "./ProtectedRoute";
+export { UserProfileMenu } from "./UserProfileMenu";

@@ -10,3 +10,5 @@ export { MangaBrowse } from "./MangaBrowse";
 export { SearchResults } from "./SearchResults";
 export { NotFound } from "./NotFound";
 export { Favorites } from "./Favorites";
+export { Login } from "./Login";
+export { Register } from "./Register";
