@@ -4,6 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import mangaRoutes from "./routes/mangaRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import roomRoutes from "./routes/roomRoutes.js";
 import dotenv from "dotenv";
 import pool from "./config/database.js";
 import { initializeSocket, setSocketInstance } from "./config/socket.js";
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/manga", mangaRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/rooms", roomRoutes);
 
 // Initialize Socket.IO
 const io = initializeSocket(httpServer);
