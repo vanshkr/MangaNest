@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import mangaRoutes from "./routes/mangaRoutes.js";
 import dotenv from "dotenv";
+import pool from "./config/database.js";
 
 dotenv.config();
 
