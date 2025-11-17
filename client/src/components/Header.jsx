@@ -11,13 +11,17 @@ import {
   Users,
   Filter,
   Shuffle,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../contexts/ThemeContext";
 
 export function Header() {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -118,6 +122,21 @@ export function Header() {
                 onClick={toggleSearch}
               >
                 <Search className="w-5 h-5" />
+              </Button>
+
+              {/* Theme Toggle - Visible on all screens */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-purple-300 hover:text-purple-500 hover:bg-purple-500/10 rounded-md"
+                onClick={toggleTheme}
+                title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              >
+                {theme === "dark" ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
               </Button>
 
               <Button

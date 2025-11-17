@@ -4,7 +4,8 @@ import "./index.css";
 import App from "./App.jsx";
 import * as Sentry from "@sentry/react";
 import { BrowserRouter } from "react-router-dom";
-import { Toaster } from "sonner";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { ToasterWrapper } from "./components/ToasterWrapper";
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
   // Setting this option to true will send default PII data to Sentry.
@@ -33,17 +34,13 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <App />
-        <Toaster
-          position="top-right"
-          theme="dark"
-          richColors
-          closeButton
-          duration={4000}
-        />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <ToasterWrapper />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
 );
