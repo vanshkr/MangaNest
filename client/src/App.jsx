@@ -8,6 +8,7 @@ import {
   HiddenGems,
   MangaDetail,
   MangaBrowse,
+  MangaView,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
 import { ScrollToTop } from "./components";
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="manga/:mangaId" element={<MangaDetail />} />
+          <Route path="manga/:mangaId/read/:chapterId" element={<MangaView />} />
           <Route path="top-airing" element={<TopAiring />} />
           <Route path="most-popular" element={<MostPopular />} />
           <Route path="recently-completed" element={<RecentlyCompleted />} />
