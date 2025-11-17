@@ -14,3 +14,4 @@ export { Login } from "./Login";
 export { Register } from "./Register";
 export { RoomCreate } from "./RoomCreate";
 export { RoomList } from "./RoomList";
+export { Room } from "./Room";
