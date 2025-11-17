@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import { verifyAccessToken } from '../utils/jwt.js';
 import { UserRepository } from '../models/User.js';
+import { registerRoomHandlers } from '../sockets/roomHandlers.js';
 
 /**
  * Initialize Socket.IO server with configuration
@@ -57,6 +58,9 @@ export const initializeSocket = (httpServer) => {
   // Connection handler
   io.on('connection', (socket) => {
     console.log(`🔌 User connected: ${socket.user.username} (${socket.id})`);
+
+    // Register room event handlers
+    registerRoomHandlers(io, socket);
 
     // Handle disconnection
     socket.on('disconnect', (reason) => {
