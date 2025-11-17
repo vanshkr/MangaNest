@@ -10,13 +10,15 @@ import {
   MangaBrowse,
   MangaView,
   SearchResults,
+  NotFound,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
 import { ScrollToTop } from "./components";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
   return (
-    <>
+    <ErrorBoundary>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -30,9 +32,10 @@ function App() {
           <Route path="hidden-gems" element={<HiddenGems />} />
           <Route path="latest-release" element={<LatestReleases />} />
           <Route path="browse" element={<MangaBrowse />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-    </>
+    </ErrorBoundary>
   );
 }
 
