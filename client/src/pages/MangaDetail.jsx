@@ -20,14 +20,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMangaDetail } from "@/hooks/useMangaQueries";
+import { useFavorites } from "@/contexts/FavoritesContext";
 
 export const MangaDetail = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isFavorited, setIsFavorited] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
   const { data, isLoading, error } = useMangaDetail(params.mangaId);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const mangaDetails = data?.details || {};
   const chaptersData = data?.chapters || [];
@@ -211,6 +212,27 @@ export const MangaDetail = () => {
               >
                 <BookOpen className="w-5 h-5 mr-2" />
                 Continue Reading
+              </Button>
+              <Button
+                onClick={() => toggleFavorite({
+                  id: mangaDetails.id,
+                  title: mangaDetails.title,
+                  imageUrl: mangaDetails.coverImageUrl,
+                })}
+                size="lg"
+                variant="outline"
+                className={`px-8 shadow-lg hover:shadow-xl transition-all duration-200 ${
+                  isFavorite(mangaDetails.id)
+                    ? "bg-pink-600 hover:bg-pink-700 text-white border-pink-600"
+                    : "bg-gray-800 hover:bg-gray-700 text-white border-gray-700"
+                }`}
+              >
+                <Heart
+                  className={`w-5 h-5 mr-2 ${
+                    isFavorite(mangaDetails.id) ? "fill-current" : ""
+                  }`}
+                />
+                {isFavorite(mangaDetails.id) ? "Remove from Favorites" : "Add to Favorites"}
               </Button>
             </div>
 

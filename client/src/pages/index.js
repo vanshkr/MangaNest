@@ -9,3 +9,4 @@ export { MangaView } from "./MangaView";
 export { MangaBrowse } from "./MangaBrowse";
 export { SearchResults } from "./SearchResults";
 export { NotFound } from "./NotFound";
+export { Favorites } from "./Favorites";
