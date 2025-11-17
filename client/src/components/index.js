@@ -22,3 +22,4 @@ export {
   TextSkeleton,
 } from "./Skeleton";
 export { default as ErrorBoundary } from "./ErrorBoundary";
+export { ProtectedRoute } from "./ProtectedRoute";

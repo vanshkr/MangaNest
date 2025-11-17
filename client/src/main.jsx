@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/react";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import { ToasterWrapper } from "./components/ToasterWrapper";
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -36,13 +37,15 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <FavoritesProvider>
-          <QueryClientProvider client={queryClient}>
-            <App />
-            <ToasterWrapper />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
-        </FavoritesProvider>
+        <AuthProvider>
+          <FavoritesProvider>
+            <QueryClientProvider client={queryClient}>
+              <App />
+              <ToasterWrapper />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </FavoritesProvider>
+        </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
