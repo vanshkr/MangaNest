@@ -13,6 +13,7 @@ export const queryKeys = {
   mangaDetail: (mangaId) => ["manga", "detail", mangaId],
   chapterPanels: (chapterId) => ["manga", "chapter-panels", chapterId],
   search: (query, limit, page) => ["manga", "search", { query, limit, page }],
+  browse: (filters, limit, page) => ["manga", "browse", { filters, limit, page }],
 };
 
 /**
@@ -168,6 +169,48 @@ export const useSearchManga = (query, limit = 20, page = 1) => {
       return await fetchWithErrorHandling(url);
     },
     enabled: query.length >= 2, // Only search if query is at least 2 characters
+    keepPreviousData: true,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+/**
+ * Hook to browse manga with filters
+ * @param {object} filters - Filter options (status, contentRating, demographic, year, sortBy)
+ * @param {number} limit - Number of results per page
+ * @param {number} page - Current page number
+ */
+export const useBrowseManga = (filters = {}, limit = 20, page = 1) => {
+  return useQuery({
+    queryKey: queryKeys.browse(filters, limit, page),
+    queryFn: async () => {
+      // Build query string from filters
+      const params = new URLSearchParams();
+      params.append("limit", limit);
+      params.append("page", page);
+
+      // Add array filters
+      if (filters.status && filters.status.length > 0) {
+        filters.status.forEach((s) => params.append("status", s));
+      }
+      if (filters.contentRating && filters.contentRating.length > 0) {
+        filters.contentRating.forEach((cr) => params.append("contentRating", cr));
+      }
+      if (filters.demographic && filters.demographic.length > 0) {
+        filters.demographic.forEach((d) => params.append("demographic", d));
+      }
+
+      // Add single value filters
+      if (filters.year) {
+        params.append("year", filters.year);
+      }
+      if (filters.sortBy) {
+        params.append("sortBy", filters.sortBy);
+      }
+
+      const url = `${API_ENDPOINTS.browse}?${params.toString()}`;
+      return await fetchWithErrorHandling(url);
+    },
     keepPreviousData: true,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

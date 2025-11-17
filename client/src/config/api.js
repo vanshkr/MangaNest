@@ -17,6 +17,7 @@ export const API_ENDPOINTS = {
   mangaDetail: (id) => `${API_BASE_URL}/api/manga/${id}`,
   chapterPanels: (id) => `${API_BASE_URL}/api/manga/chapters/${id}`,
   search: `${API_BASE_URL}/api/manga/search`,
+  browse: `${API_BASE_URL}/api/manga/browse`,
 };
 
 /**
