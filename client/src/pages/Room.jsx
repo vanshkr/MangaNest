@@ -10,6 +10,24 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import {
   Users,
   Crown,
   LogOut,
@@ -43,6 +61,10 @@ export const Room = () => {
     sendMessage,
     kickParticipant,
     updatePage,
+    updateSettings,
+    closeRoom,
+    regenerateInvite,
+    transferHostRole,
   } = useRoom();
 
   const [messageInput, setMessageInput] = useState('');
@@ -50,6 +72,13 @@ export const Room = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageInput, setPageInput] = useState('');
   const [isPageChanging, setIsPageChanging] = useState(false);
+  const [isHostControlsOpen, setIsHostControlsOpen] = useState(false);
+  const [selectedNewHost, setSelectedNewHost] = useState('');
+  const [roomSettings, setRoomSettings] = useState({
+    syncMode: '',
+    allowChat: true,
+    maxParticipants: 10,
+  });
 
   // Join room on mount if not already in
   useEffect(() => {
@@ -75,6 +104,17 @@ export const Room = () => {
       }
     }
   }, [currentRoom?.current_page]);
+
+  // Sync room settings
+  useEffect(() => {
+    if (currentRoom) {
+      setRoomSettings({
+        syncMode: currentRoom.sync_mode || 'host-controlled',
+        allowChat: currentRoom.allow_chat ?? true,
+        maxParticipants: currentRoom.max_participants || 10,
+      });
+    }
+  }, [currentRoom]);
 
   const handleLeaveRoom = async () => {
     try {
@@ -119,6 +159,50 @@ export const Room = () => {
   const handleKick = async (userId) => {
     if (window.confirm('Are you sure you want to kick this participant?')) {
       await kickParticipant(userId);
+    }
+  };
+
+  const handleTransferHost = async () => {
+    if (!selectedNewHost) {
+      toast.error('Please select a new host');
+      return;
+    }
+    if (window.confirm('Are you sure you want to transfer host role?')) {
+      try {
+        await transferHostRole(selectedNewHost);
+        setIsHostControlsOpen(false);
+        setSelectedNewHost('');
+      } catch (error) {
+        console.error('Failed to transfer host:', error);
+      }
+    }
+  };
+
+  const handleUpdateSettings = async () => {
+    try {
+      await updateSettings(roomSettings);
+      toast.success('Room settings updated');
+    } catch (error) {
+      console.error('Failed to update settings:', error);
+    }
+  };
+
+  const handleCloseRoom = async () => {
+    if (window.confirm('Are you sure you want to close this room? This will remove all participants.')) {
+      try {
+        await closeRoom();
+        navigate('/rooms');
+      } catch (error) {
+        console.error('Failed to close room:', error);
+      }
+    }
+  };
+
+  const handleRegenerateInvite = async () => {
+    try {
+      await regenerateInvite();
+    } catch (error) {
+      console.error('Failed to regenerate invite:', error);
     }
   };
 
@@ -285,7 +369,146 @@ export const Room = () => {
                 <Users className="w-4 h-4" />
                 Participants ({participants.length}/{currentRoom.max_participants})
               </span>
-              {isHost && <Settings className="w-4 h-4 text-purple-400" />}
+              {isHost && (
+                <Dialog open={isHostControlsOpen} onOpenChange={setIsHostControlsOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-auto p-1 text-purple-400 hover:text-purple-300 hover:bg-purple-500/10"
+                    >
+                      <Settings className="w-4 h-4" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-gray-900 border-purple-500/30 text-white max-w-md max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-purple-400">Host Controls</DialogTitle>
+                      <DialogDescription className="text-gray-400">
+                        Manage room settings and participants
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-6 py-4">
+                      {/* Transfer Host Section */}
+                      <div className="space-y-3">
+                        <h3 className="text-sm font-semibold text-purple-300 flex items-center gap-2">
+                          <Crown className="w-4 h-4" />
+                          Transfer Host
+                        </h3>
+                        <div className="space-y-2">
+                          <Select value={selectedNewHost} onValueChange={setSelectedNewHost}>
+                            <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white">
+                              <SelectValue placeholder="Select new host..." />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-700">
+                              {participants
+                                .filter((p) => p.user_id !== user?.id)
+                                .map((participant) => (
+                                  <SelectItem key={participant.user_id} value={participant.user_id}>
+                                    {participant.username}
+                                  </SelectItem>
+                                ))}
+                            </SelectContent>
+                          </Select>
+                          <Button
+                            onClick={handleTransferHost}
+                            disabled={!selectedNewHost}
+                            variant="outline"
+                            className="w-full border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
+                          >
+                            <Crown className="w-4 h-4 mr-2" />
+                            Transfer Host Role
+                          </Button>
+                        </div>
+                      </div>
+
+                      <Separator className="bg-gray-700" />
+
+                      {/* Room Settings Section */}
+                      <div className="space-y-3">
+                        <h3 className="text-sm font-semibold text-purple-300 flex items-center gap-2">
+                          <Settings className="w-4 h-4" />
+                          Room Settings
+                        </h3>
+
+                        {/* Sync Mode */}
+                        <div className="space-y-2">
+                          <Label htmlFor="syncMode" className="text-gray-300">Sync Mode</Label>
+                          <Select
+                            value={roomSettings.syncMode}
+                            onValueChange={(value) =>
+                              setRoomSettings({ ...roomSettings, syncMode: value })
+                            }
+                          >
+                            <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-700">
+                              <SelectItem value="host-controlled">Host Controlled</SelectItem>
+                              <SelectItem value="anyone-can-control">Anyone Can Control</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Allow Chat */}
+                        <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
+                          <div>
+                            <Label htmlFor="allowChat" className="text-gray-300 cursor-pointer">
+                              Allow Chat
+                            </Label>
+                            <p className="text-xs text-gray-500">
+                              Enable or disable chat messages
+                            </p>
+                          </div>
+                          <Switch
+                            id="allowChat"
+                            checked={roomSettings.allowChat}
+                            onCheckedChange={(checked) =>
+                              setRoomSettings({ ...roomSettings, allowChat: checked })
+                            }
+                          />
+                        </div>
+
+                        <Button
+                          onClick={handleUpdateSettings}
+                          className="w-full bg-purple-500 hover:bg-purple-600"
+                        >
+                          Save Settings
+                        </Button>
+                      </div>
+
+                      <Separator className="bg-gray-700" />
+
+                      {/* Invite Code Section */}
+                      <div className="space-y-3">
+                        <h3 className="text-sm font-semibold text-purple-300">Invite Code</h3>
+                        <Button
+                          onClick={handleRegenerateInvite}
+                          variant="outline"
+                          className="w-full border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
+                        >
+                          <RefreshCw className="w-4 h-4 mr-2" />
+                          Regenerate Invite Code
+                        </Button>
+                      </div>
+
+                      <Separator className="bg-gray-700" />
+
+                      {/* Danger Zone */}
+                      <div className="space-y-3">
+                        <h3 className="text-sm font-semibold text-red-400">Danger Zone</h3>
+                        <Button
+                          onClick={handleCloseRoom}
+                          variant="outline"
+                          className="w-full border-red-500/30 text-red-400 hover:bg-red-500/10"
+                        >
+                          Close Room
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0 pb-4">

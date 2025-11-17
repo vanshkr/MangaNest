@@ -303,6 +303,23 @@ export const RoomProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Transfer host to another participant (host only)
+   */
+  const transferHostRole = async (newHostId) => {
+    if (!currentRoom || !isHost) return;
+
+    try {
+      await roomAPI.transferHost(currentRoom.id, newHostId);
+      toast.success('Host transferred successfully');
+    } catch (error) {
+      toast.error('Failed to transfer host', {
+        description: error.message,
+      });
+      throw error;
+    }
+  };
+
   // Socket.IO event listeners
   useEffect(() => {
     if (!socket || !isConnected || !isInRoom) return;
@@ -439,6 +456,7 @@ export const RoomProvider = ({ children }) => {
     updateSettings,
     closeRoom,
     regenerateInvite,
+    transferHostRole,
   };
 
   return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;

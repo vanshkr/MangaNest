@@ -240,3 +240,20 @@ export const regenerateInviteCode = async (roomId) => {
   }
   return data.data;
 };
+
+/**
+ * Transfer host to another participant (host only)
+ */
+export const transferHost = async (roomId, newHostId) => {
+  const response = await fetch(`${ROOM_BASE}/${roomId}/transfer-host`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ newHostId }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to transfer host');
+  }
+  return data.data;
+};
