@@ -12,6 +12,7 @@ export const queryKeys = {
   latestReleases: (limit, page) => ["manga", "latest-releases", { limit, page }],
   mangaDetail: (mangaId) => ["manga", "detail", mangaId],
   chapterPanels: (chapterId) => ["manga", "chapter-panels", chapterId],
+  search: (query, limit, page) => ["manga", "search", { query, limit, page }],
 };
 
 /**
@@ -150,5 +151,24 @@ export const useChapterPanels = (chapterId) => {
     },
     enabled: !!chapterId, // Only fetch if chapterId exists
     staleTime: 1000 * 60 * 30, // 30 minutes - chapter pages don't change
+  });
+};
+
+/**
+ * Hook to search manga by title
+ * @param {string} query - Search query
+ * @param {number} limit - Number of results per page
+ * @param {number} page - Current page number
+ */
+export const useSearchManga = (query, limit = 20, page = 1) => {
+  return useQuery({
+    queryKey: queryKeys.search(query, limit, page),
+    queryFn: async () => {
+      const url = `${API_ENDPOINTS.search}?query=${encodeURIComponent(query)}&limit=${limit}&page=${page}`;
+      return await fetchWithErrorHandling(url);
+    },
+    enabled: query.length >= 2, // Only search if query is at least 2 characters
+    keepPreviousData: true,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };

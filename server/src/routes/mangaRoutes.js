@@ -9,9 +9,11 @@ import {
   latestReleases,
   mangaDetails,
   chapterPanels,
+  search,
 } from "../controllers/mangaController.js";
 const router = Router();
 
+router.get("/search", search);
 router.get("/trending", trending);
 router.get("/collections", collections);
 router.get("/top-airing", airing);

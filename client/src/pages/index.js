@@ -7,3 +7,4 @@ export { TopAiring } from "./TopAiring";
 export { MangaDetail } from "./MangaDetail";
 export { MangaView } from "./MangaView";
 export { MangaBrowse } from "./MangaBrowse";
+export { SearchResults } from "./SearchResults";

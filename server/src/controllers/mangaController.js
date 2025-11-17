@@ -8,6 +8,7 @@ import {
   getLatestReleases,
   getMangaDetails,
   getChapterPanels,
+  searchManga,
 } from "../services/mangaService.js";
 import { getPaginationParams } from "../utils/pagination.js";
 
@@ -76,5 +77,13 @@ export const mangaDetails = asyncHandler(async (req, res) => {
 export const chapterPanels = asyncHandler(async (req, res) => {
   const chapterId = req.params.chapterId;
   const data = await getChapterPanels(chapterId);
+  res.json(data);
+});
+
+export const search = asyncHandler(async (req, res) => {
+  const query = req.query.query;
+  const { limit, page } = getPaginationParams(req.query.limit, req.query.page);
+  const offset = (page - 1) * limit;
+  const data = await searchManga(query, limit, offset);
   res.json(data);
 });

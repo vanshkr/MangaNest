@@ -410,3 +410,32 @@ export const getChapterPanels = async (chapterId) => {
     return;
   }
 };
+
+export const searchManga = async (query, limit, offset = 0) => {
+  try {
+    const url =
+      `${process.env.MANGA_API_URL}/manga?title=${encodeURIComponent(query)}&limit=${limit}&offset=${offset}` +
+      `&includes[]=cover_art&contentRating[]=safe&contentRating[]=suggestive`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`MangaDex ${res.status}: ${await res.text()}`);
+
+    const json = await res.json();
+    const mangas = {};
+    mangas.data = json.data.map((manga) => {
+      return {
+        id: manga.id,
+        title:
+          manga.attributes.altTitles?.find((title) => "en" in title)?.en ||
+          "Unknown Title",
+        desc: manga.attributes.description?.en,
+        imageUrl: getImageUrl(manga.relationships, manga.id, 256),
+      };
+    });
+    mangas.total = json.total;
+    return mangas;
+  } catch (error) {
+    console.error("Failed to search manga:", error);
+    return {};
+  }
+};

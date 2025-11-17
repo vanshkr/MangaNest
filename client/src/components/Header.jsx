@@ -14,11 +14,13 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export function Header({ searchQuery, setSearchQuery }) {
+export function Header() {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Close menu when screen size changes
   useEffect(() => {
@@ -47,6 +49,14 @@ export function Header({ searchQuery, setSearchQuery }) {
     setIsSearchOpen(!isSearchOpen);
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim().length >= 2) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false); // Close mobile search
+    }
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-black/75 backdrop-blur-md border-b border-purple-500/20 text-white">
@@ -63,7 +73,10 @@ export function Header({ searchQuery, setSearchQuery }) {
             </div>
 
             {/* Desktop Search Bar - Hidden on mobile */}
-            <div className="hidden md:flex items-center mx-8 max-w-md w-full">
+            <form
+              onSubmit={handleSearch}
+              className="hidden md:flex items-center mx-8 max-w-md w-full"
+            >
               <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
@@ -73,9 +86,11 @@ export function Header({ searchQuery, setSearchQuery }) {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 w-full"
                 />
-                <Filter className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 cursor-pointer" />
+                <Link to="/browse">
+                  <Filter className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 cursor-pointer hover:text-purple-400 transition-colors" />
+                </Link>
               </div>
-            </div>
+            </form>
 
             {/* Desktop Navigation - Hidden on mobile and tablet */}
             <nav className="hidden lg:flex items-center space-x-6">
@@ -138,7 +153,10 @@ export function Header({ searchQuery, setSearchQuery }) {
 
           {/* Mobile Search Bar - Slides down when toggled */}
           {isSearchOpen && (
-            <div className="md:hidden py-4 border-t border-gray-700 animate-in slide-in-from-top-2">
+            <form
+              onSubmit={handleSearch}
+              className="md:hidden py-4 border-t border-gray-700 animate-in slide-in-from-top-2"
+            >
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
@@ -148,9 +166,11 @@ export function Header({ searchQuery, setSearchQuery }) {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 w-full"
                 />
-                <Filter className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 cursor-pointer" />
+                <Link to="/browse">
+                  <Filter className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 cursor-pointer hover:text-purple-400 transition-colors" />
+                </Link>
               </div>
-            </div>
+            </form>
           )}
         </div>
       </header>
