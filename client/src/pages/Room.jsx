@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useRoom } from '@/contexts/RoomContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -21,6 +22,8 @@ import {
   ChevronRight,
   Loader2,
   MessageSquare,
+  ArrowRight,
+  RefreshCw,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -45,6 +48,8 @@ export const Room = () => {
   const [messageInput, setMessageInput] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageInput, setPageInput] = useState('');
+  const [isPageChanging, setIsPageChanging] = useState(false);
 
   // Join room on mount if not already in
   useEffect(() => {
@@ -59,9 +64,17 @@ export const Room = () => {
   // Sync current page with room state
   useEffect(() => {
     if (currentRoom) {
-      setCurrentPage(currentRoom.current_page || 1);
+      const newPage = currentRoom.current_page || 1;
+      if (newPage !== currentPage) {
+        setIsPageChanging(true);
+        setCurrentPage(newPage);
+        setPageInput(newPage.toString());
+
+        // Reset page changing state after animation
+        setTimeout(() => setIsPageChanging(false), 500);
+      }
     }
-  }, [currentRoom]);
+  }, [currentRoom?.current_page]);
 
   const handleLeaveRoom = async () => {
     try {
@@ -92,6 +105,14 @@ export const Room = () => {
   const handlePageChange = (newPage) => {
     if (newPage >= 1) {
       updatePage(newPage);
+    }
+  };
+
+  const handleJumpToPage = (e) => {
+    e.preventDefault();
+    const page = parseInt(pageInput);
+    if (!isNaN(page) && page >= 1) {
+      handlePageChange(page);
     }
   };
 
@@ -175,12 +196,28 @@ export const Room = () => {
                   <p className="text-sm">Manga ID: {currentRoom.manga_id}</p>
                   <p className="text-sm">Chapter ID: {currentRoom.chapter_id}</p>
                 </div>
-                <div className="text-6xl font-bold text-purple-400 mb-2">
+                <div
+                  className={`text-6xl font-bold text-purple-400 mb-2 transition-all duration-300 ${
+                    isPageChanging ? 'scale-110 text-pink-400' : 'scale-100'
+                  }`}
+                >
                   Page {currentPage}
                 </div>
-                <p className="text-gray-500 text-sm">
-                  Sync Mode: {currentRoom.sync_mode === 'host-controlled' ? 'Host Controlled' : 'Anyone Can Control'}
-                </p>
+
+                {/* Sync Status */}
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 border-purple-500/30">
+                    <RefreshCw className="w-3 h-3 mr-1" />
+                    {currentRoom.sync_mode === 'host-controlled' ? 'Host Controlled' : 'Anyone Can Control'}
+                  </Badge>
+                </div>
+
+                {currentRoom.last_page_changer && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Last changed by: <span className="text-purple-400">{currentRoom.last_page_changer}</span>
+                  </p>
+                )}
+
                 {currentRoom.sync_mode === 'host-controlled' && !isHost && (
                   <p className="text-yellow-400 text-sm mt-2">
                     Only the host can change pages
@@ -190,26 +227,49 @@ export const Room = () => {
             </Card>
 
             {/* Page Controls */}
-            <div className="flex items-center justify-center gap-4">
-              <Button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage <= 1 || (currentRoom.sync_mode === 'host-controlled' && !isHost)}
-                className="bg-purple-500 hover:bg-purple-600 disabled:opacity-50"
-              >
-                <ChevronLeft className="w-5 h-5" />
-                Previous
-              </Button>
-              <div className="px-4 py-2 bg-gray-800 border border-purple-500/20 rounded-md">
-                <span className="text-white font-semibold">Page {currentPage}</span>
+            <div className="space-y-4">
+              <div className="flex items-center justify-center gap-4">
+                <Button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage <= 1 || (currentRoom.sync_mode === 'host-controlled' && !isHost)}
+                  className="bg-purple-500 hover:bg-purple-600 disabled:opacity-50"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                  Previous
+                </Button>
+                <div className="px-4 py-2 bg-gray-800 border border-purple-500/20 rounded-md">
+                  <span className="text-white font-semibold">Page {currentPage}</span>
+                </div>
+                <Button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentRoom.sync_mode === 'host-controlled' && !isHost}
+                  className="bg-purple-500 hover:bg-purple-600 disabled:opacity-50"
+                >
+                  Next
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
               </div>
-              <Button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentRoom.sync_mode === 'host-controlled' && !isHost}
-                className="bg-purple-500 hover:bg-purple-600 disabled:opacity-50"
-              >
-                Next
-                <ChevronRight className="w-5 h-5" />
-              </Button>
+
+              {/* Jump to Page */}
+              {(currentRoom.sync_mode !== 'host-controlled' || isHost) && (
+                <form onSubmit={handleJumpToPage} className="flex items-center justify-center gap-2">
+                  <Input
+                    type="number"
+                    min="1"
+                    value={pageInput}
+                    onChange={(e) => setPageInput(e.target.value)}
+                    placeholder={`Go to page...`}
+                    className="w-32 bg-gray-800/50 border-gray-700 text-white text-center"
+                  />
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
+                  >
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </form>
+              )}
             </div>
           </div>
         </div>

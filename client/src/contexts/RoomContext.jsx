@@ -309,7 +309,17 @@ export const RoomProvider = ({ children }) => {
 
     // Page changed
     const handlePageChanged = ({ page, userId }) => {
-      setCurrentRoom((prev) => (prev ? { ...prev, current_page: page } : null));
+      // Look up username from participants
+      const participant = participants.find((p) => p.user_id === userId);
+      const username = participant?.username || 'Someone';
+
+      setCurrentRoom((prev) =>
+        prev ? {
+          ...prev,
+          current_page: page,
+          last_page_changer: username
+        } : null
+      );
     };
 
     // New message
