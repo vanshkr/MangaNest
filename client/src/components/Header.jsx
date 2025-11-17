@@ -44,7 +44,7 @@ export function Header() {
 
   const navItems = [
     { label: "Home", href: "/", active: true, icon: Home },
-    { label: "Read2gether", href: "#", icon: Users },
+    { label: "Read2gether", href: "/rooms/create", icon: Users },
     { label: "Favorites", href: "/favorites", icon: Heart },
     { label: "Random", href: "#", icon: Shuffle },
   ];

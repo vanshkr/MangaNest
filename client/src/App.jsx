@@ -14,9 +14,10 @@ import {
   Favorites,
   Login,
   Register,
+  RoomCreate,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
-import { ScrollToTop } from "./components";
+import { ScrollToTop, ProtectedRoute } from "./components";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
@@ -41,6 +42,14 @@ function App() {
           <Route path="latest-release" element={<LatestReleases />} />
           <Route path="browse" element={<MangaBrowse />} />
           <Route path="favorites" element={<Favorites />} />
+          <Route
+            path="rooms/create"
+            element={
+              <ProtectedRoute>
+                <RoomCreate />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
