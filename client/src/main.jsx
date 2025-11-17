@@ -8,6 +8,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { SocketProvider } from "./contexts/SocketContext";
+import { RoomProvider } from "./contexts/RoomContext";
 import { ToasterWrapper } from "./components/ToasterWrapper";
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -40,13 +41,15 @@ createRoot(document.getElementById("root")).render(
       <ThemeProvider>
         <AuthProvider>
           <SocketProvider>
-            <FavoritesProvider>
-              <QueryClientProvider client={queryClient}>
-                <App />
-                <ToasterWrapper />
-                <ReactQueryDevtools initialIsOpen={false} />
-              </QueryClientProvider>
-            </FavoritesProvider>
+            <RoomProvider>
+              <FavoritesProvider>
+                <QueryClientProvider client={queryClient}>
+                  <App />
+                  <ToasterWrapper />
+                  <ReactQueryDevtools initialIsOpen={false} />
+                </QueryClientProvider>
+              </FavoritesProvider>
+            </RoomProvider>
           </SocketProvider>
         </AuthProvider>
       </ThemeProvider>
