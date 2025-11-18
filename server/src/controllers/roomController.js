@@ -438,3 +438,47 @@ export const regenerateInviteCode = asyncHandler(async (req, res) => {
     });
   }
 });
+
+/**
+ * Validation for transfer host
+ */
+export const transferHostValidation = [
+  param('roomId')
+    .isUUID()
+    .withMessage('Invalid room ID'),
+  body('newHostId')
+    .isUUID()
+    .withMessage('Invalid new host user ID'),
+];
+
+/**
+ * Transfer host to another participant
+ * POST /api/rooms/:roomId/transfer-host
+ */
+export const transferHost = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Validation failed',
+      errors: errors.array(),
+    });
+  }
+
+  const { roomId } = req.params;
+  const { newHostId } = req.body;
+
+  try {
+    const result = await RoomService.transferHost(roomId, req.user.id, newHostId);
+    res.status(200).json({
+      success: true,
+      message: 'Host transferred successfully',
+      data: result,
+    });
+  } catch (error) {
+    res.status(403).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});

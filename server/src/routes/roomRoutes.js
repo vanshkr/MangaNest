@@ -15,10 +15,12 @@ import {
   sendMessage,
   getRoomMessages,
   regenerateInviteCode,
+  transferHost,
   createRoomValidation,
   updateRoomValidation,
   updatePageValidation,
   sendMessageValidation,
+  transferHostValidation,
 } from '../controllers/roomController.js';
 
 const router = express.Router();
@@ -39,6 +41,7 @@ router.post('/:roomId/join', joinRoom);
 router.post('/join/:inviteCode', joinByInviteCode);
 router.post('/:roomId/leave', leaveRoom);
 router.post('/:roomId/kick/:userId', kickParticipant);
+router.post('/:roomId/transfer-host', transferHostValidation, transferHost);
 
 // Page synchronization
 router.patch('/:roomId/page', updatePageValidation, updateCurrentPage);

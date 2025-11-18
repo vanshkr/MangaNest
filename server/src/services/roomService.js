@@ -429,4 +429,54 @@ export class RoomService {
 
     return await RoomRepository.regenerateInviteCode(roomId);
   }
+
+  /**
+   * Transfer host to another participant (host only)
+   * @param {string} roomId - Room UUID
+   * @param {string} currentHostId - Current host user ID
+   * @param {string} newHostId - New host user ID
+   * @returns {Promise<Object>} Result with new host info
+   */
+  static async transferHost(roomId, currentHostId, newHostId) {
+    // Verify current host
+    const isHost = await RoomParticipantRepository.isUserHost(roomId, currentHostId);
+    if (!isHost) {
+      throw new Error('Only the host can transfer host role');
+    }
+
+    // Verify new host is in room
+    const isNewHostInRoom = await RoomParticipantRepository.isUserInRoom(roomId, newHostId);
+    if (!isNewHostInRoom) {
+      throw new Error('Target user is not in this room');
+    }
+
+    // Cannot transfer to self
+    if (currentHostId === newHostId) {
+      throw new Error('Cannot transfer host to yourself');
+    }
+
+    // Get new host details for the event
+    const newHost = await RoomParticipantRepository.findByRoomAndUser(roomId, newHostId);
+
+    // Transfer host role
+    await RoomParticipantRepository.transferHost(roomId, currentHostId, newHostId);
+
+    // Emit socket event
+    try {
+      const io = getSocketInstance();
+      io.to(roomId).emit('host:transferred', {
+        roomId,
+        newHostId,
+        newHostUsername: newHost.username,
+      });
+    } catch (error) {
+      console.error('Failed to emit host:transferred event:', error);
+    }
+
+    return {
+      success: true,
+      newHostId,
+      newHostUsername: newHost.username,
+    };
+  }
 }
