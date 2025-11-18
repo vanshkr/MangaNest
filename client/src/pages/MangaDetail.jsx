@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Star,
   BookOpen,
@@ -18,55 +18,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { API_ENDPOINTS, fetchWithErrorHandling } from "@/config/api";
 
 export const MangaDetail = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isFavorited, setIsFavorited] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [mangaDetails, setMangaDetails] = useState({});
-  const [chaptersData, setChaptersData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const params = useParams();
-  const navigate = useNavigate();
-
-  // Get reading progress from localStorage
-  const getLastReadChapter = () => {
-    const allKeys = Object.keys(localStorage);
-    const progressKeys = allKeys.filter(key =>
-      key.startsWith(`progress_${params.mangaId}_`)
-    );
-    if (progressKeys.length > 0) {
-      // Get the most recent progress
-      const latestKey = progressKeys[progressKeys.length - 1];
-      const chapterId = latestKey.replace(`progress_${params.mangaId}_`, '');
-      return chapterId;
-    }
-    return null;
-  };
-
-  const handleStartReading = () => {
-    if (chaptersData && chaptersData.length > 0) {
-      // Start from the last chapter (assuming chapters are sorted newest first)
-      const firstChapter = chaptersData[chaptersData.length - 1];
-      navigate(`/manga/${params.mangaId}/read/${firstChapter.chapterId}`);
-    }
-  };
-
-  const handleContinueReading = () => {
-    const lastReadChapterId = getLastReadChapter();
-    if (lastReadChapterId) {
-      navigate(`/manga/${params.mangaId}/read/${lastReadChapterId}`);
-    } else {
-      handleStartReading();
-    }
-  };
-
-  const handleReadChapter = (chapterId) => {
-    navigate(`/manga/${params.mangaId}/read/${chapterId}`);
-  };
 
   useEffect(() => {
     const fetchMangaDetails = async () => {
@@ -92,13 +50,13 @@ export const MangaDetail = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
         <div className="flex items-center justify-center py-12">
-          <div className="text-red-400 text-lg">{error}</div>
+          <div className="text-red-400 text-lg">{error.message}</div>
         </div>
       </div>
     );
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
         <div className="flex items-center justify-center py-12">
@@ -230,6 +188,27 @@ export const MangaDetail = () => {
               >
                 <BookOpen className="w-5 h-5 mr-2" />
                 Continue Reading
+              </Button>
+              <Button
+                onClick={() => toggleFavorite({
+                  id: mangaDetails.id,
+                  title: mangaDetails.title,
+                  imageUrl: mangaDetails.coverImageUrl,
+                })}
+                size="lg"
+                variant="outline"
+                className={`px-8 shadow-lg hover:shadow-xl transition-all duration-200 ${
+                  isFavorite(mangaDetails.id)
+                    ? "bg-pink-600 hover:bg-pink-700 text-white border-pink-600"
+                    : "bg-gray-800 hover:bg-gray-700 text-white border-gray-700"
+                }`}
+              >
+                <Heart
+                  className={`w-5 h-5 mr-2 ${
+                    isFavorite(mangaDetails.id) ? "fill-current" : ""
+                  }`}
+                />
+                {isFavorite(mangaDetails.id) ? "Remove from Favorites" : "Add to Favorites"}
               </Button>
             </div>
 

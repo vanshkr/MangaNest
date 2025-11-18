@@ -8,6 +8,8 @@ import {
   getLatestReleases,
   getMangaDetails,
   getChapterPanels,
+  searchManga,
+  browseManga,
 } from "../services/mangaService.js";
 import { getPaginationParams } from "../utils/pagination.js";
 
@@ -76,5 +78,55 @@ export const mangaDetails = asyncHandler(async (req, res) => {
 export const chapterPanels = asyncHandler(async (req, res) => {
   const chapterId = req.params.chapterId;
   const data = await getChapterPanels(chapterId);
+  res.json(data);
+});
+
+export const search = asyncHandler(async (req, res) => {
+  const query = req.query.query;
+  const { limit, page } = getPaginationParams(req.query.limit, req.query.page);
+  const offset = (page - 1) * limit;
+  const data = await searchManga(query, limit, offset);
+  res.json(data);
+});
+
+export const browse = asyncHandler(async (req, res) => {
+  const { limit, page } = getPaginationParams(req.query.limit, req.query.page);
+  const offset = (page - 1) * limit;
+
+  // Parse filters from query params
+  const filters = {};
+
+  // Status filter (can be multiple)
+  if (req.query.status) {
+    filters.status = Array.isArray(req.query.status)
+      ? req.query.status
+      : [req.query.status];
+  }
+
+  // Content rating filter (can be multiple)
+  if (req.query.contentRating) {
+    filters.contentRating = Array.isArray(req.query.contentRating)
+      ? req.query.contentRating
+      : [req.query.contentRating];
+  }
+
+  // Demographic filter (can be multiple)
+  if (req.query.demographic) {
+    filters.demographic = Array.isArray(req.query.demographic)
+      ? req.query.demographic
+      : [req.query.demographic];
+  }
+
+  // Year filter (single value)
+  if (req.query.year) {
+    filters.year = req.query.year;
+  }
+
+  // Sort by filter (single value)
+  if (req.query.sortBy) {
+    filters.sortBy = req.query.sortBy;
+  }
+
+  const data = await browseManga(filters, limit, offset);
   res.json(data);
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, FreeMode, Mousewheel, Autoplay } from "swiper/modules";
 import {
@@ -19,26 +19,13 @@ import "swiper/css/navigation";
 import "swiper/css/free-mode";
 import "swiper/css/free-mode";
 import { useNavigate } from "react-router-dom";
-import { API_ENDPOINTS, fetchWithErrorHandling } from "@/config/api";
+import { useTrendingManga } from "@/hooks/useMangaQueries";
 
 export function TrendingCarousel() {
-  const [trendingManga, setTrendingManga] = useState([]);
   const [swiperRef, setSwiperRef] = useState(null);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchTrendingManga = async () => {
-      try {
-        const data = await fetchWithErrorHandling(API_ENDPOINTS.trending);
-        setTrendingManga(data);
-      } catch (err) {
-        console.error("Failed to fetch trending manga:", err);
-        setError("Failed to load trending manga");
-      }
-    };
-    fetchTrendingManga();
-  }, []);
+  const { data: trendingManga = [], isLoading, error } = useTrendingManga();
 
   const handlePrevSlide = () => {
     if (swiperRef) {
@@ -56,13 +43,13 @@ export function TrendingCarousel() {
     return (
       <section className="relative">
         <div className="flex items-center justify-center py-12">
-          <div className="text-red-400 text-lg">{error}</div>
+          <div className="text-red-400 text-lg">Failed to load trending manga</div>
         </div>
       </section>
     );
   }
 
-  if (!trendingManga.length) {
+  if (isLoading || !trendingManga.length) {
     return (
       <section className="relative">
         <div className="flex items-center justify-center py-12">

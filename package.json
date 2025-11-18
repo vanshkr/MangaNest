@@ -1,0 +1,9 @@
+{
+	"dependencies": {
+		"jsonwebtoken": "^9.0.2",
+		"bcryptjs": "^3.0.3",
+		"pg": "^8.16.3",
+		"express-validator": "^7.3.0",
+		"dotenv": "^17.2.3"
+	}
+}

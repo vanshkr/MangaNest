@@ -1,36 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { MangaContentGrid, Pagination } from "@/components";
-import { API_ENDPOINTS, fetchWithErrorHandling } from "@/config/api";
+import { useLatestReleasesManga } from "@/hooks/useMangaQueries";
 const MemoPagination = React.memo(Pagination);
 
 export const LatestReleases = () => {
-  const [mangaList, setMangaList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [total, setTotal] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data, isLoading, error } = useLatestReleasesManga(40, currentPage);
 
-  useEffect(() => {
-    const fetchLatestReleases = async (limit, page) => {
-      try {
-        setLoading(true);
-        const data = await fetchWithErrorHandling(
-          `${API_ENDPOINTS.latestReleases}?limit=${limit}&page=${page}`
-        );
-        setMangaList(data.data);
-        if (total === 1) {
-          setTotal(Math.ceil(data.total / limit));
-        }
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch latest releases:", err);
-        setError("Failed to load manga. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchLatestReleases(40, currentPage);
-  }, [currentPage]);
+  const mangaList = data?.data || [];
+  const total = data?.total ? Math.ceil(data.total / 40) : 1;
 
   const onPageChange = useCallback((page) => {
     setCurrentPage(page);
@@ -40,7 +18,7 @@ export const LatestReleases = () => {
     return (
       <section className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center py-12">
-          <div className="text-red-400 text-lg">{error}</div>
+          <div className="text-red-400 text-lg">{error.message}</div>
         </div>
       </section>
     );
@@ -53,7 +31,7 @@ export const LatestReleases = () => {
           Latest Release
         </h2>
       </div>
-      {loading ? (
+      {isLoading ? (
         <div className="text-white text-center py-12">Loading...</div>
       ) : (
         <>

@@ -1,33 +1,28 @@
 import { MangaContentGrid } from "./MangaContentGrid";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { API_ENDPOINTS, fetchWithErrorHandling } from "@/config/api";
+import { useLatestReleasesManga } from "@/hooks/useMangaQueries";
 
 export function RecentReleases() {
-  const [mangaList, setMangaList] = useState([]);
-  const [error, setError] = useState(null);
+  const { data, isLoading, error } = useLatestReleasesManga(25, 1);
   const navigate = useNavigate();
+  const mangaList = data?.data || [];
 
-  useEffect(() => {
-    const fetchLatestReleases = async () => {
-      try {
-        const data = await fetchWithErrorHandling(
-          `${API_ENDPOINTS.latestReleases}?limit=25`
-        );
-        setMangaList(data.data);
-      } catch (err) {
-        console.error("Failed to fetch latest releases:", err);
-        setError("Failed to load latest releases");
-      }
-    };
-    fetchLatestReleases();
-  }, []);
   if (error) {
     return (
       <section>
         <div className="flex items-center justify-center py-12">
-          <div className="text-red-400 text-lg">{error}</div>
+          <div className="text-red-400 text-lg">{error.message}</div>
+        </div>
+      </section>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <section>
+        <div className="flex items-center justify-center py-12">
+          <div className="text-white text-lg">Loading...</div>
         </div>
       </section>
     );

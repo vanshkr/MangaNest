@@ -1,29 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { MangaGrid } from "./MangaGrid";
-import { API_ENDPOINTS, fetchWithErrorHandling } from "@/config/api";
+import { useMangaCollections } from "@/hooks/useMangaQueries";
 
 export const MangaSection = () => {
-  const [mangaData, setMangaData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: mangaData, isLoading, error } = useMangaCollections();
 
-  useEffect(() => {
-    const fetchMangaCollection = async () => {
-      try {
-        const data = await fetchWithErrorHandling(API_ENDPOINTS.collections);
-        setMangaData(data);
-      } catch (err) {
-        console.error("Failed to fetch manga collections:", err);
-        setError("Failed to load manga collections");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMangaCollection();
-  }, []);
-
-  if (loading) return <div className="text-white text-center py-12">Loading...</div>;
-  if (error) return <div className="text-red-400 text-center py-12">{error}</div>;
+  if (isLoading) return <div className="text-white text-center py-12">Loading...</div>;
+  if (error) return <div className="text-red-400 text-center py-12">{error.message}</div>;
 
   return (
     <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
