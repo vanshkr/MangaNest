@@ -29,6 +29,7 @@ export const RoomProvider = ({ children }) => {
   const [currentRoom, setCurrentRoom] = useState(null);
   const [participants, setParticipants] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [reactions, setReactions] = useState([]);
   const [isInRoom, setIsInRoom] = useState(false);
   const [isHost, setIsHost] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -381,6 +382,16 @@ export const RoomProvider = ({ children }) => {
       toast.info(`${username} left the room`);
     };
 
+    // Reaction received
+    const handleReactionReceived = (reaction) => {
+      setReactions((prev) => [...prev, { ...reaction, id: Date.now() + Math.random() }]);
+
+      // Auto-remove reaction after animation (3 seconds)
+      setTimeout(() => {
+        setReactions((prev) => prev.filter((r) => r.id !== reaction.id));
+      }, 3000);
+    };
+
     // Register listeners
     socket.on('page:changed', handlePageChanged);
     socket.on('message:new', handleNewMessage);
@@ -392,6 +403,7 @@ export const RoomProvider = ({ children }) => {
     socket.on('room:updated', handleRoomUpdated);
     socket.on('participant:entered', handleParticipantEntered);
     socket.on('participant:exited', handleParticipantExited);
+    socket.on('reaction:received', handleReactionReceived);
 
     // Cleanup
     return () => {
@@ -405,6 +417,7 @@ export const RoomProvider = ({ children }) => {
       socket.off('room:updated', handleRoomUpdated);
       socket.off('participant:entered', handleParticipantEntered);
       socket.off('participant:exited', handleParticipantExited);
+      socket.off('reaction:received', handleReactionReceived);
     };
   }, [socket, isConnected, isInRoom, currentRoom, user]);
 
@@ -413,6 +426,7 @@ export const RoomProvider = ({ children }) => {
     currentRoom,
     participants,
     messages,
+    reactions,
     isInRoom,
     isHost,
     isLoading,
@@ -429,6 +443,7 @@ export const RoomProvider = ({ children }) => {
     updateSettings,
     closeRoom,
     regenerateInvite,
+    transferHostRole,
   };
 
   return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;
